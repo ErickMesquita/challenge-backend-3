@@ -7,6 +7,6 @@ RUN mkdir /usr/src/app/requirements
 
 WORKDIR /usr/src/app/
 
-COPY ../requirements /usr/src/app/requirements
+COPY requirements /usr/src/app/requirements
 
 RUN pip install -r requirements/development.txt

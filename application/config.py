@@ -1,16 +1,17 @@
 class Config(object):
-    """Base configuration"""
+	"""Base configuration"""
+	TESTING = False
 
 
 class ProductionConfig(Config):
-    """Production configuration"""
+	"""Production configuration"""
 
 
 class DevelopmentConfig(Config):
-    """Development configuration"""
+	"""Development configuration"""
 
 
 class TestingConfig(Config):
-    """Testing configuration"""
+	"""Testing configuration"""
 
-    TESTING = True
+	TESTING = True
