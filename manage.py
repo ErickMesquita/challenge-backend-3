@@ -41,6 +41,8 @@ def cli():
 @cli.command(context_settings={"ignore_unknown_options": True})
 @click.argument("subcommand", nargs=-1, type=click.Path())
 def flask(subcommand):
+	configure_app(os.getenv("APPLICATION_CONFIG"))
+
 	subcommand_list = list(subcommand)
 
 	if subcommand_list and subcommand_list[0] == "run" and "--host" not in subcommand_list:

@@ -1,0 +1,9 @@
+{% extends "template_cabecalho.html" %}
+{% block conteudo %}
+	<form method="post" action="{{ url_for('transacoes_post') }}" enctype="multipart/form-data">
+		<div class="form-group">
+			<input type="file" id="file" name="file" accept="text/csv">
+		</div>
+		<button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+	</form>
+{% endblock %}

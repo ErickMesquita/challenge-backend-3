@@ -1,5 +1,6 @@
 import os
 
+
 class Config(object):
 	"""Base configuration"""
 	TESTING = False
@@ -18,6 +19,9 @@ class Config(object):
 	SQLALCHEMY_DATABASE_URI = \
 	f"postgresql://{user}:{password}@{host}:{port}/{database}"
 
+	UPLOAD_FOLDER = "application/uploads"
+	ALLOWED_EXTENSIONS = {"csv"}
+
 
 class ProductionConfig(Config):
 	"""Production configuration"""
@@ -25,9 +29,10 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
 	"""Development configuration"""
-
+	SECRET_KEY = "senha123"
 
 class TestingConfig(Config):
 	"""Testing configuration"""
+	SECRET_KEY = "senha123"
 	TESTING = True
 	SQLALCHEMY_TRACK_MODIFICATIONS = True
