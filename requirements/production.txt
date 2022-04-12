@@ -9,5 +9,6 @@ typing_extensions==4.1.1
 Werkzeug==2.1.1
 zipp==3.8.0
 pandas==1.4.0 # Requires Python>=3.8 and pytest>=6.0
-SQLAlchemy==1.4
-psycopg2
+flask-sqlalchemy==2.5.1
+sqlalchemy==1.4.35
+greenlet==1.1.2
