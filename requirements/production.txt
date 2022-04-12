@@ -12,3 +12,6 @@ pandas==1.4.0 # Requires Python>=3.8 and pytest>=6.0
 flask-sqlalchemy==2.5.1
 sqlalchemy==1.4.35
 greenlet==1.1.2
+flask-migrate==3.1.0
+alembic==1.7.7
+Mako==1.2.0

@@ -43,7 +43,7 @@ def cli():
 def flask(subcommand):
 	subcommand_list = list(subcommand)
 
-	if "--host" not in subcommand_list:
+	if subcommand_list and subcommand_list[0] == "run" and "--host" not in subcommand_list:
 		subcommand_list.append("--host")
 		subcommand_list.append("::1")
 
