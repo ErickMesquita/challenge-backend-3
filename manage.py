@@ -45,7 +45,7 @@ def flask(subcommand):
 
 	if subcommand_list and subcommand_list[0] == "run" and "--host" not in subcommand_list:
 		subcommand_list.append("--host")
-		subcommand_list.append("::1")
+		subcommand_list.append("::")
 
 	cmdline = ["flask"] + subcommand_list
 

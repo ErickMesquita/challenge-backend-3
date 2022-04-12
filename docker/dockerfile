@@ -5,8 +5,8 @@ RUN mkdir -p /usr/src/app
 RUN mkdir /usr/src/app/code
 RUN mkdir /usr/src/app/requirements
 
-WORKDIR /usr/src/app/
+WORKDIR /usr/src/app/code
 
 COPY requirements /usr/src/app/requirements
 
-RUN pip install -r requirements/development.txt
+RUN pip install -r /usr/src/app/requirements/development.txt

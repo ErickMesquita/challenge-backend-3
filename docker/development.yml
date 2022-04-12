@@ -7,7 +7,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      LANG: ${POSTGRES_LANG}
+      # LANG: ${POSTGRES_LANG}
+      # LC_ALL: ${POSTGRES_LANG}
+      # LC_CTYPE: ${POSTGRES_LANG}
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
@@ -19,6 +21,7 @@ services:
       context: ${PWD}
       dockerfile: docker/dockerfile
     environment:
+      FLASK_APP: ${FLASK_APP}
       FLASK_ENV: ${FLASK_ENV}
       FLASK_CONFIG: ${FLASK_CONFIG}
       APPLICATION_DB: ${APPLICATION_DB}
@@ -26,7 +29,7 @@ services:
       POSTGRES_HOSTNAME: "db"
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PORT: ${POSTGRES_PORT}
-    command: flask run --host ::1
+    command: ["flask", "run", "--host", "::"]
     networks:
       - back-end
     volumes:
