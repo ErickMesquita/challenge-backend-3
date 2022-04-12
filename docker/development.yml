@@ -21,6 +21,11 @@ services:
     environment:
       FLASK_ENV: ${FLASK_ENV}
       FLASK_CONFIG: ${FLASK_CONFIG}
+      APPLICATION_DB: ${APPLICATION_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_HOSTNAME: "db"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     command: flask run --host ::1
     networks:
       - back-end
@@ -28,6 +33,8 @@ services:
       - ${PWD}:/usr/src/app/code
     ports:
       - "5000:5000"
+    depends_on:
+      - db
 
 networks:
   back-end:
