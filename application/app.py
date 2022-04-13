@@ -6,7 +6,7 @@ Obtido de: https://www.thedigitalcatonline.com/blog/2020/07/05/flask-project-set
 from flask import Flask
 
 
-def create_app(config_name):
+def create_app(config_name: str) -> Flask:
 
     app = Flask(__name__)
 
