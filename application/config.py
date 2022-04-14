@@ -19,7 +19,7 @@ class Config(object):
 	SQLALCHEMY_DATABASE_URI = \
 	f"postgresql://{user}:{password}@{host}:{port}/{database}"
 
-	UPLOAD_FOLDER = "application/uploads"
+	UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
 	ALLOWED_EXTENSIONS = {"csv"}
 
 
