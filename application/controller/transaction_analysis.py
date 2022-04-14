@@ -1,11 +1,12 @@
 import pandas as pd
 import datetime
 from decimal import Decimal
+from numpy import nan
 
 
 def decimal_from_value(value):
-	if value is None or value == "":
-		return None
+	if value is None or value == "" or value is nan or value is pd.NaT:
+		return nan
 	return Decimal(value)
 
 
@@ -24,16 +25,20 @@ def clean_uploaded_transactions_csv(file_or_path) -> (pd.DataFrame, str):
 					 parse_dates=[7],
 					 converters={"Valor": decimal_from_value})
 
-	while len(df) > 1 and df.at[0, "Data e hora"] is None:
+	while len(df) > 1 and (df["Data e hora"].iloc[0] is None or
+						   df["Data e hora"].iloc[0] == "" or
+						   df["Data e hora"].iloc[0] is pd.NaT):
 		df = df[1:]
 
-	if not df.empty and df.at[0, "Data e hora"] is None:
+	if not df.empty and (df["Data e hora"].iloc[0] is None or
+						 df["Data e hora"].iloc[0] == "" or
+						 df["Data e hora"].iloc[0] is pd.NaT):
 		return None, "Error: Invalid Date"
 
 	if df.empty:
 		return None, "Error: Empty File"
 
-	first_date = df.at[0, "Data e hora"].date()
+	first_date = df["Data e hora"].iloc[0].date()
 	df = df[df["Data e hora"].apply(lambda x: x.date()) == first_date]
 
 	df.dropna(inplace=True)

@@ -61,7 +61,7 @@ def test_save_csv_file_after_upload(app, client, resources_path):
 	with open(csv_file_146_bytes_path, "rb") as csv_file_146_bytes:
 		response = client.post("/transaction", data={"file": (csv_file_146_bytes, "146.csv", "csv")})
 
-	assert response.status_code == 302
+	assert response.status_code == 303
 	assert os.path.exists(uploaded_file_path) == True
 	assert os.path.getsize(uploaded_file_path) == 146
 
