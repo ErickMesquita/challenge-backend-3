@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from numpy import datetime64
 
-from pytest_fixtures import resources_path
+from .pytest_fixtures import resources_path
 from application.controller.transaction_analysis import clean_uploaded_transactions_csv
 
 

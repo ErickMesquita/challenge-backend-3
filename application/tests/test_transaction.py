@@ -1,5 +1,5 @@
 import os
-from pytest_fixtures import app, client, resources_path
+from .pytest_fixtures import app, client, resources_path
 
 
 def test_response_200_when_access_homepage(client):

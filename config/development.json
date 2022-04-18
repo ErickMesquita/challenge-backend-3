@@ -3,7 +3,6 @@
 	"FLASK_CONFIG": "development",
 	"FLASK_APP": "application.wsgi",
 	"SERVER_NAME": "::1 localhost",
-	"POSTGRES_VERSION": "14.2",
 	"POSTGRES_DB": "postgres",
 	"POSTGRES_USER": "postgres",
 	"POSTGRES_PASSWORD": "senha123",

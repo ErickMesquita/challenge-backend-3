@@ -4,12 +4,14 @@ Obtido de: https://www.thedigitalcatonline.com/blog/2020/07/05/flask-project-set
 """
 
 from flask import Flask
+from manage import configure_app
 
 
 def create_app(config_name: str) -> Flask:
 
     app = Flask(__name__)
 
+    configure_app(config_name)
     config_module = f"application.config.{config_name.capitalize()}Config"
 
     app.config.from_object(config_module)

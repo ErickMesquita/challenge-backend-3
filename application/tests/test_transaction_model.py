@@ -1,30 +1,46 @@
 import datetime
 import os
-from application.models import Transaction, TransactionsFile
+
+import pytest
+from application.tests.pytest_fixtures import bank, branch, account
+
+from application.models import BankAccount, Transaction, TransactionsFile, db
 
 
-def test_transaction_object_creation():
-	banco_origem = "BANCO BANCÃO SA"
-	agencia_origem = "0001"
-	conta_origem = "00001-1"
-	banco_destino = "BANCO EXEMPLO S.A."
-	agencia_destino = "0001"
-	conta_destino = "000000000002-6"
-	valor = 1000000.00
-	data_e_hora = datetime.datetime(2022, 1, 1, 7, 30, 0)
+def test_bank_account_object_creation(bank, branch, account):
+	bank_account = BankAccount(bank=bank, branch=branch, account=account)
 
-	transaction = Transaction(banco_origem=banco_origem, agencia_origem=agencia_origem, conta_origem=conta_origem,
-							  banco_destino=banco_destino, agencia_destino=agencia_destino, conta_destino=conta_destino,
-							  valor=valor, data_e_hora=data_e_hora)
+	assert bank_account.bank == bank
+	assert bank_account.branch == branch
+	assert bank_account.account == account
 
-	assert transaction.banco_origem == banco_origem
-	assert transaction.agencia_origem == agencia_origem
-	assert transaction.conta_origem == conta_origem
-	assert transaction.banco_destino == banco_destino
-	assert transaction.agencia_destino == agencia_destino
-	assert transaction.conta_destino == conta_destino
-	assert transaction.valor == valor
-	assert transaction.data_e_hora == data_e_hora
+
+def test_transaction_object_creation(bank, branch, account):
+	recipient_bank = "BANCO EXEMPLO S.A."
+	recipient_branch = "0001"
+	recipient_account = "000000000002-6"
+
+	amount = 1000000.00
+	date_and_time = datetime.datetime(2022, 1, 1, 7, 30, 0)
+
+	sender = BankAccount(bank=bank, branch=branch, account=account)
+	recipient = BankAccount(bank=recipient_bank, branch=recipient_branch, account=recipient_account)
+
+	transaction = Transaction(sender=sender, recipient=recipient,
+							  amount=amount, date_and_time=date_and_time)
+
+	assert transaction.sender.bank == bank
+	assert transaction.sender.branch == branch
+	assert transaction.sender.account == account
+	assert transaction.sender.id == sender.id
+
+	assert transaction.recipient.bank == recipient_bank
+	assert transaction.recipient.branch == recipient_branch
+	assert transaction.recipient.account == recipient_account
+	assert transaction.recipient.id == recipient.id
+
+	assert transaction.amount == amount
+	assert transaction.date_and_time == date_and_time
 
 
 def test_transactionsFile_object_creation():

@@ -14,7 +14,7 @@ class Config(object):
 	port = os.environ.get("POSTGRES_PORT")
 
 	encoding = os.environ.get("DB_ENCODING")
-	SQLALCHEMY_ECHO = os.environ.get("DB_ECHO")
+	SQLALCHEMY_ECHO = bool(os.environ.get("DB_ECHO"))
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 	SQLALCHEMY_DATABASE_URI = \
 	f"postgresql://{user}:{password}@{host}:{port}/{database}"

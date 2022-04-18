@@ -2,7 +2,9 @@ version: '3.4'
 
 services:
   db:
-    image: postgres
+    build:
+      context: ./db
+      dockerfile: db.dockerfile
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

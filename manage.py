@@ -17,13 +17,22 @@ def setenv(variable, default):
 	os.environ[variable] = os.getenv(variable, default)
 
 
-setenv("APPLICATION_CONFIG", default="development")
+setenv("APPLICATION_CONFIG", default="testing")
+
+
+@click.group()
+def cli():
+	pass
 
 
 # Lê a configuração do arquivo JSON
 def configure_app(config: str):
-	config_json_filename = config + ".json"
-	with open(os.path.join("config", config_json_filename)) as f:
+	# if isinstance(config, tuple):
+	# 	config = str(config[0])
+	config_json_filename = f"{config}.json"
+	project_basedir = os.path.dirname(__file__)
+	print(config_json_filename)
+	with open(os.path.join(project_basedir, "config", config_json_filename)) as f:
 		config = json.load(f)
 
 	# Convert the config into a usable Python dictionary
@@ -31,11 +40,6 @@ def configure_app(config: str):
 
 	for key, value in config.items():
 		setenv(key, value)
-
-
-@click.group()
-def cli():
-	pass
 
 
 @cli.command(context_settings={"ignore_unknown_options": True})
@@ -93,13 +97,14 @@ def compose(subcommand):
 @cli.command()
 @click.argument("filenames", nargs=-1)
 def test(filenames):
-	os.environ["APPLICATION_CONFIG"] = "testing"
-	configure_app(os.getenv("APPLICATION_CONFIG"))
+	testing = "testing"
+	os.environ["APPLICATION_CONFIG"] = testing
+	configure_app(testing)
 
-	cmdline = docker_compose_cmdline(os.getenv("APPLICATION_CONFIG")) + ["up", "-d"]
+	cmdline = docker_compose_cmdline(testing) + ["up", "-d"]
 	subprocess.call(cmdline)
 
-	cmdline = docker_compose_cmdline(os.getenv("APPLICATION_CONFIG")) + ["logs", "db"]
+	cmdline = docker_compose_cmdline(testing) + ["logs", "db"]
 	logs = subprocess.check_output(cmdline)
 	while "ready to accept connections" not in logs.decode("utf-8"):
 		time.sleep(0.1)
@@ -109,8 +114,11 @@ def test(filenames):
 	cmdline.extend(filenames)
 	subprocess.call(cmdline)
 
-	cmdline = docker_compose_cmdline(os.getenv("APPLICATION_CONFIG")) + ["down"]
+	cmdline = docker_compose_cmdline(testing) + ["down"]
 	subprocess.call(cmdline)
+
+
+print(f'2 os.getenv("APPLICATION_CONFIG")= {os.getenv("APPLICATION_CONFIG")}')
 
 
 @cli.command(context_settings={"ignore_unknown_options": True})

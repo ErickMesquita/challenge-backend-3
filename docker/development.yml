@@ -2,18 +2,18 @@ version: '3.4'
 
 services:
   db:
-    image: postgres:${POSTGRES_VERSION}
+    build:
+      context: ./db
+      dockerfile: db.dockerfile
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      # LANG: ${POSTGRES_LANG}
-      # LC_ALL: ${POSTGRES_LANG}
-      # LC_CTYPE: ${POSTGRES_LANG}
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - docker/db-init-scripts:/docker-entrypoint-initdb.d
 
 
   web:
