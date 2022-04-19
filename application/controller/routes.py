@@ -1,8 +1,7 @@
 import os
 from flask import redirect, render_template, url_for, request, flash, Flask
 from werkzeug.utils import secure_filename
-from application.controller.transaction_analysis import clean_uploaded_transactions_csv
-
+from application.controller import transactions_utils as t_utils
 
 
 def configure_routes(app: Flask):
@@ -10,16 +9,13 @@ def configure_routes(app: Flask):
 	def _teste():
 		return "<h1>Teste</h1><h4>Funciona!!!</h4>"
 
-
 	@app.get("/forms/transaction")
 	def transacoes_get_form():
 		return render_template("form_transactions.html", titulo="Importar Transações")
 
-
 	def allowed_file(filename):
 		return '.' in filename and \
 			filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
 
 	@app.post("/transaction")
 	def transacoes_post():
@@ -45,10 +41,13 @@ def configure_routes(app: Flask):
 		print(f'Conteúdo: {open(file_path, "r", encoding="UTF-8").read()}')
 		flash(f"Arquivo chegando - filename = {file.filename} - filesize = {os.path.getsize(file_path)} Bytes")
 
-		df, error = clean_uploaded_transactions_csv(file_path)
+		df, error = t_utils.clean_uploaded_transactions_csv(file_path)
 
 		if error:
 			flash(error)
 			return redirect(url_for("transacoes_get_form"), 303)
+
+		t_utils.push_bank_accounts_to_database(df)
+		t_utils.push_transactions_to_db(df)
 
 		return redirect(url_for("transacoes_get_form"), 302)
