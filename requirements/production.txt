@@ -18,3 +18,8 @@ greenlet==1.1.2
 flask-migrate==3.1.0
 alembic==1.7.7
 Mako==1.2.0
+flask-bcrypt==1.0.1
+bcrypt==3.2.0
+flask-login==0.6.0
+Flask-WTF==1.0.1
+WTForms==3.0.1

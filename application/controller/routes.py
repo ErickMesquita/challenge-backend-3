@@ -1,7 +1,19 @@
 import os
-from flask import redirect, render_template, url_for, request, flash, Flask
+from urllib.parse import urlparse, urljoin
+
+from flask import redirect, render_template, url_for, request, flash, Flask, session, abort
+from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
+from flask_login import login_user, login_required
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
+from application.controller import user_utils as u_utils
+from application.controller.forms import LoginForm, SignUpForm
+
+
+def is_safe_url(target):
+	ref_url = urlparse(request.host_url)
+	test_url = urlparse(urljoin(request.host_url, target))
+	return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 
 def configure_routes(app: Flask):
@@ -10,15 +22,16 @@ def configure_routes(app: Flask):
 		return "<h1>Teste</h1><h4>Funciona!!!</h4>"
 
 	@app.get("/forms/transaction")
-	def transacoes_get_form():
-		return render_template("form_transactions.html", titulo="Importar Transações")
+	@login_required
+	def transactions_get_form():
+		return render_template("form_transactions.html", title="Importar Transações")
 
 	def allowed_file(filename):
 		return '.' in filename and \
 			filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 	@app.post("/transaction")
-	def transacoes_post():
+	def transactions_post():
 		if 'file' not in request.files:
 			flash('Nenhum arquivo enviado')
 			return redirect(url_for("transacoes_get_form"), 303)
@@ -47,7 +60,58 @@ def configure_routes(app: Flask):
 			flash(error)
 			return redirect(url_for("transacoes_get_form"), 303)
 
-		t_utils.push_bank_accounts_to_database(df)
 		t_utils.push_transactions_to_db(df)
 
 		return redirect(url_for("transacoes_get_form"), 302)
+
+	@app.get("/transactions")
+	@login_required
+	def transactions_get():
+		return "Transactions get"
+
+	@app.route("/login", methods=["GET", "POST"])
+	def login():
+		form = LoginForm()
+		if not form.validate_on_submit():
+			return render_template("form_login.html", title="Login", form=form)
+
+		user = u_utils.user_from_db(username_or_email=form.username_or_email.data)
+
+		if user is None:
+			return login_invalid("Nome de usuário ou email inválido", "danger")
+
+		if not check_password_hash(user.password, form.password.data):
+			return login_invalid("Senha inválida", "danger")
+
+		login_user(user)
+		flash(f"Usuário {user.username} logado com sucesso!", "success")
+
+		if "next" not in request.args:
+			return redirect(url_for("transactions_get_form"))
+
+		next_url = request.args.get('next')
+
+		if not is_safe_url(next_url):
+			return abort(400)
+		return redirect(next_url)
+
+	def login_invalid(message: str, category: str = None):
+		flash(message, category)
+		return redirect(url_for("login", urlAfterLogin=request.args.get("urlAfterLogin")))
+
+	@app.get("/logout")
+	def logout():
+		session.pop('user_id', None)
+		flash(f"Usuário saiu com sucesso!")
+		return redirect(url_for("_teste"))
+
+	@app.get("/forms/signup")
+	def signup_form_get():
+		form = SignUpForm()
+		return render_template("form_auth.html", form=form)
+
+	@app.post("/users")
+	@login_required
+	def users_post():
+		pass
+

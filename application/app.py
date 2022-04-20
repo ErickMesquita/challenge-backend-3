@@ -16,9 +16,12 @@ def create_app(config_name: str) -> Flask:
 
     app.config.from_object(config_module)
 
-    from application.models import db, migrate
+    from application.models import db, migrate, login_manager, bcrypt
     db.init_app(app)
+    db.app = app
     migrate.init_app(app, db)
+    login_manager.init_app(app)
+    bcrypt.init_app(app)
 
     @app.route("/")
     def hello_world():

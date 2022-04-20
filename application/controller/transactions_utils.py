@@ -1,3 +1,5 @@
+from typing import Union
+
 import pandas as pd
 import datetime
 from decimal import Decimal
@@ -55,6 +57,27 @@ def clean_uploaded_transactions_csv(file_or_path) -> (pd.DataFrame, str):
 	return df, ""
 
 
+def bank_account_id_from_database(bk: BankAccount = None, bank=None, branch=None, account=None):
+	if bk is None:
+		bk = BankAccount(bank=bank, branch=branch, account=account)
+
+	if bk.id is not None:
+		return bk.id
+
+	query = db.select(BankAccount).filter_by(bank=bk.bank,
+											 branch=bk.branch,
+											 account=bk.account)
+	result = db.session.execute(query).first()
+
+	if result is not None:  # Found on DB
+		return result[0].id
+
+	db.session.add(bk)
+	db.session.commit()
+
+	return bk.id
+
+
 def push_bank_accounts_to_database(df: pd.DataFrame):
 	if df.empty:
 		return
@@ -87,46 +110,25 @@ def push_bank_accounts_to_database(df: pd.DataFrame):
 		try:
 			db.session.commit()
 		except IntegrityError:
-			print("This bank_account already exists")
 			db.session.rollback()
 
 
 def push_transactions_to_db(df: pd.DataFrame):
 	if df.empty:
 		return
-	"""
-	x = df[:1]
-	print(f"x['Banco origem'][0]={x['Banco origem'][0]}")
-	print(f"type(x['Banco origem'][0])={type(x['Banco origem'][0])}")
-	q = db.select(BankAccount.id).filter_by(bank=x["Banco origem"][0],
-											branch=x["Agência origem"][0],
-											account=x["Conta origem"][0])
-	executed_query = db.session.execute(q)
-	print(f"executed_query= {executed_query}")
-
-	lista = executed_query.first()
-	print(f"lista={lista}")
-	print(f"type(lista)= {type(lista)}")
-	"""
 
 	if not db.inspect(db.engine).has_table("transaction"):
 		db.create_all()
 
 	for index, row in df.iterrows():
-		executed_query = db.session.execute(
-			db.select(BankAccount.id).filter_by(bank=row["Banco origem"],
-												branch=row["Agência origem"],
-												account=row["Conta origem"])
-		).first()
-		sender_id = executed_query[0] if executed_query is not None else None
+		sender_id = bank_account_id_from_database(bank=row["Banco origem"],
+												  branch=row["Agência origem"],
+												  account=row["Conta origem"])
 		df.loc[index, "sender_id"] = sender_id
 
-		executed_query = db.session.execute(
-			db.select(BankAccount.id).filter_by(bank=row["Banco destino"],
-												branch=row["Agência destino"],
-												account=row["Conta destino"])
-		).first()
-		recipient_id = executed_query[0] if executed_query is not None else None
+		recipient_id = bank_account_id_from_database(bank=row["Banco destino"],
+													 branch=row["Agência destino"],
+													 account=row["Conta destino"])
 		df.loc[index, "recipient_id"] = recipient_id
 
 		transaction = Transaction(sender_id=sender_id, recipient_id=recipient_id,

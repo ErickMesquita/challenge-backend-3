@@ -4,26 +4,29 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
-		<title>{{ titulo }}</title>
+		<title>{{ title }}</title>
 	</head>
 	<body>
 		<div class="container">
-			{% with messages = get_flashed_messages() %}
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
 				{% if messages %}
-				<ul class="list-group-item-success list-unstyled flash">
-				{% for message in messages %}
-					<li class="alert-success alert">{{ message }}</li>
-				{% endfor %}
-				</ul>
+					{% for category, message in messages %}
+					<div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					{% endfor %}
 				{% endif %}
 			{% endwith %}
 			<div class="page-header">
-				<h1>{{ titulo }}</h1>
+				<h1>{{ title }}</h1>
 			</div>
 
 			{% block conteudo %}
 			{% endblock %}
 
 		</div>
+	<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
 	</body>
 </html>

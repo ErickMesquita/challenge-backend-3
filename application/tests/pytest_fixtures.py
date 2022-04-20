@@ -5,7 +5,7 @@ from decimal import Decimal
 import os
 from application.app import create_app
 from application.controller.routes import configure_routes
-from application.models import db
+from application.models import db, login_manager
 
 
 @pytest.fixture
@@ -13,6 +13,7 @@ def app():
 	app = create_app("testing")
 	configure_routes(app)
 	db.init_app(app)
+	login_manager.init_app(app)
 	db.app = app
 	yield app
 

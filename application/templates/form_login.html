@@ -1,0 +1,26 @@
+{% extends "template_cabecalho.html" %}
+{% block conteudo %}
+        <form method="post" action="{{ request.path }}">
+		{{ form.csrf_token }}
+			<fieldset>
+			<div class="form-group">
+				{{ form.username_or_email.label }}
+				{{ form.username_or_email(class_="form-control",
+									  	  placeholder="Nome de usuário ou email")}}
+				{% for error in form.username_or_email.errors %}
+					{{ error }}
+				{% endfor %}
+			</div>
+			<div class="form-group">
+				{{ form.password.label }}
+				{{ form.password(class_="form-control")}}
+				{% for error in form.password.errors %}
+					{{ error }}
+				{% endfor %}
+			</div>
+			</fieldset>
+			<button type="submit" class="btn btn-block btn-primary">
+				Login
+			</button>
+		</form>
+{% endblock %}

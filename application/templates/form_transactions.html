@@ -1,6 +1,6 @@
 {% extends "template_cabecalho.html" %}
 {% block conteudo %}
-	<form method="post" action="{{ url_for('transacoes_post') }}" enctype="multipart/form-data">
+	<form method="post" action="{{ url_for('transactions_post') }}" enctype="multipart/form-data">
 		<div class="mb-3">
 			<label for="file" class="form-label">Upload da Transação</label>
 			<input class="form-control" type="file" id="file" name="file" accept="text/csv" aria-describedby="fileHelp">

@@ -2,10 +2,13 @@ from dataclasses import dataclass
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager, UserMixin
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
 migrate = Migrate()
-
+login_manager = LoginManager()
+bcrypt = Bcrypt()
 
 class BankAccount(db.Model):
 	__tablename__ = 'bank_account'
@@ -41,4 +44,25 @@ class TransactionsFile(db.Model):
 	csv_filepath = db.Column(db.Text, nullable=False)
 	upload_datetime = db.Column(db.DateTime, nullable=False)
 
+
+class User(UserMixin, db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(80), nullable=False, unique=True)
+	password = db.Column(db.String(100), nullable=False)
+	email = db.Column(db.String(100), nullable=False, unique=True)
+
+	def __repr__(self):
+		return f"<User {self.username}>"
+
+	@staticmethod
+	def user_from_db(username_or_email=None, **kwargs):
+		if username_or_email is None:
+			query = db.select(User).filter_by(**kwargs)
+		else:
+			query = db.select(User). \
+				where(
+				db.or_(User.username == username_or_email,
+					   User.email == username_or_email)
+			)
+		return db.session.scalars(query).first()
 
