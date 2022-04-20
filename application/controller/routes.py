@@ -3,7 +3,7 @@ from urllib.parse import urlparse, urljoin
 
 from flask import redirect, render_template, url_for, request, flash, Flask, session, abort
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, logout_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
 from application.controller import user_utils as u_utils
@@ -77,7 +77,7 @@ def configure_routes(app: Flask):
 
 		user = u_utils.user_from_db(username_or_email=form.username_or_email.data)
 
-		if user is None:
+		if user is None or not user.active:
 			return login_invalid("Nome de usuário ou email inválido", "danger")
 
 		if not check_password_hash(user.password, form.password.data):
@@ -97,21 +97,38 @@ def configure_routes(app: Flask):
 
 	def login_invalid(message: str, category: str = None):
 		flash(message, category)
-		return redirect(url_for("login", urlAfterLogin=request.args.get("urlAfterLogin")))
+		return redirect(url_for("login", next=request.args.get("next")))
 
 	@app.get("/logout")
 	def logout():
-		session.pop('user_id', None)
+		logout_user()
 		flash(f"Usuário saiu com sucesso!")
 		return redirect(url_for("_teste"))
 
 	@app.get("/forms/signup")
 	def signup_form_get():
 		form = SignUpForm()
-		return render_template("form_auth.html", form=form)
+		return render_template("form_signup.html", title="Sign Up", form=form)
 
 	@app.post("/users")
 	@login_required
 	def users_post():
-		pass
+		form = SignUpForm()
+		if not form.validate_on_submit():
+			return redirect(url_for("signup_form_get"))
+
+		username = form.username.data
+		email = form.email.data
+
+		success, message = u_utils.create_new_user(username, email)
+
+		if not success:
+			flash(message, "danger")
+		else:
+			flash(f"Senha: {message}")
+
+		return redirect(url_for("login"))
+
+
+
 

@@ -1,6 +1,6 @@
 {% extends "template_cabecalho.html" %}
 {% block conteudo %}
-        <form method="post" action="{{ request.path }}">
+        <form method="post" action="{{ url_for('login', next=request.args.get('next')) }}">
 		{{ form.csrf_token }}
 			<fieldset>
 			<div class="form-group">

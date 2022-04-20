@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import DataRequired, InputRequired, Length, Regexp, NoneOf, EqualTo, ValidationError, Email
+from wtforms import StringField, PasswordField, EmailField
+from wtforms.validators import InputRequired, Length, NoneOf, ValidationError, Email
 
 from application.models import User, db
 
@@ -13,19 +13,11 @@ class SignUpForm(FlaskForm):
 			NoneOf(values="Admin")
 		]
 	)
-	password = PasswordField(
-		label="Senha",
+	email = EmailField(
+		label="Email",
 		validators=[
 			InputRequired(),
-			Length(8, 512, message="A senha deve ter mais do que 8 caracteres")
-		]
-	)
-	c_password = PasswordField(
-		label="Digite a senha novamente",
-		validators=[
-			InputRequired(),
-			Length(8, 512),
-			EqualTo("password", message="As senhas devem ser iguais")
+			Email(message="Email inválido")
 		]
 	)
 

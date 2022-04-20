@@ -10,10 +10,4 @@ configure_routes(app)
 
 with app.app_context():
 	models.db.create_all()
-	"""
-	init()
-	stamp()
-	migrate()
-	upgrade()
-	"""
 

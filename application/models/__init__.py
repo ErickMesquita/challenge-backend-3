@@ -10,6 +10,7 @@ migrate = Migrate()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
 
+
 class BankAccount(db.Model):
 	__tablename__ = 'bank_account'
 
@@ -50,9 +51,20 @@ class User(UserMixin, db.Model):
 	username = db.Column(db.String(80), nullable=False, unique=True)
 	password = db.Column(db.String(100), nullable=False)
 	email = db.Column(db.String(100), nullable=False, unique=True)
+	login_id = db.Column(db.Integer, db.Identity(start=5000, increment=1), nullable=False, unique=True)
+	active = db.Column(db.Boolean, db.ColumnDefault(True), nullable=False)
+
+	__table_args__ = (db.CheckConstraint("login_id <> id",
+										  name="id_and_login_id_are_different"),)
 
 	def __repr__(self):
 		return f"<User {self.username}>"
+
+	def get_id(self):
+		if self.login_id is not None:
+			return str(self.login_id)
+		query = db.select(User.login_id).filter_by(id=self.id)
+		return db.session.scalars(query).first()
 
 	@staticmethod
 	def user_from_db(username_or_email=None, **kwargs):
