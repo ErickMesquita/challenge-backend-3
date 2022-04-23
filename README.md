@@ -1,11 +1,11 @@
 <h1 align="center">
 	<p align="center">Desafio Back-End</p>
-	<a href="https://www.alura.com.br/challenges/back-end-3"><img src="https://www.alura.com.br/assets/img/challenges/back-end/challenges-logo-2.svg" alt="Alura Challenges"></a>
+	<a href="https://www.alura.com.br/challenges/back-end-3"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/challenges-logo-2.svg" alt="Alura Challenges"></a>
 </h1>
 <div align="center" id="badges">
-	<a href="https://docs.python.org/3.8/"><img src="https://img.shields.io/badge/Python-3.8-brightgreen" alt="Python 3.8"></a>
-	<a href="https://docs.pytest.org/en/7.1.x/"><img src="https://img.shields.io/badge/tested%20with-pytest-blue" alt="Teste with pytest"></a>
-	<a href="https://docs.docker.com/compose/"><img src="https://img.shields.io/badge/Deploy%20with-Docker%20Compose-blue" alt="Deploy with Docker Compose"></a>
+	<a href="https://docs.python.org/3.8/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/Python-3.8-brightgreen.svg" alt="Python 3.8"></a>
+	<a href="https://docs.pytest.org/en/7.1.x/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/tested%20with-pytest-blue.svg" alt="Teste with pytest"></a>
+	<a href="https://docs.docker.com/compose/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/Deploy%20with-Docker%20Compose-blue.svg" alt="Deploy with Docker Compose"></a>
 	<img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
 </div>
 <h3>
