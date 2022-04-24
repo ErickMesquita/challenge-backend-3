@@ -7,6 +7,37 @@
 		<title>{{ title }}</title>
 	</head>
 	<body>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">
+					<img src="{{ url_for('static', filename='challenges-logo.svg') }}" alt="logo" height="24" class="d-inline-block align-text-top">
+					Alura Challenge
+				</a>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav">
+						{% if current_user.is_authenticated %}
+						<li class="nav-item">
+							<a class="nav-link" aria-current="page" href="{{ url_for('transactions_get_form') }}">Importações</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('signup_form_get') }}">Sign Up</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('users_get') }}">Usuários</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('logout') }}">Sair</a>
+						</li>
+						{% endif %}
+						{% if not current_user.is_authenticated %}
+						<li class="nav-item">
+							<a class="nav-link" href="/login">Login</a>
+						</li>
+						{% endif %}
+				  </ul>
+				</div>
+			</div>
+		</nav>
 		<div class="container">
 			{% with messages = get_flashed_messages(with_categories=true) %}
 			<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->

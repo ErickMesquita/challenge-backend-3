@@ -108,7 +108,7 @@ def configure_routes(app: Flask):
 	@login_required
 	def signup_form_get():
 		form = SignUpForm()
-		return render_template("form_signup.html", title="CADASTRAR USUÁRIO", form=form)
+		return render_template("form_signup.html", title="Cadastrar Usuário", form=form)
 
 	@app.post("/users")
 	@login_required
