@@ -2,11 +2,12 @@ import os
 from urllib.parse import urlparse, urljoin
 
 from flask import redirect, render_template, url_for, request, flash, Flask, abort
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
 from application.models.forms import LoginForm, SignUpForm
 from application.models.user import User, check_password_hash, get_users_list
+from html import escape
 
 
 def is_safe_url(target):
@@ -108,7 +109,7 @@ def configure_routes(app: Flask):
 	@login_required
 	def signup_form_get():
 		form = SignUpForm()
-		return render_template("form_signup.html", title="Cadastrar Usuário", form=form)
+		return render_template("form_edit_user.html", title="Cadastrar Usuário", form=form, button_text="Cadastrar")
 
 	@app.post("/users")
 	@login_required
@@ -137,7 +138,59 @@ def configure_routes(app: Flask):
 	def users_get():
 		return render_template("show_users.html", title="Usuários Cadastrados", users_list=get_users_list())
 
-	@app.delete("/users/<int:id>")
+	@app.get("/users/<int:user_id>")
 	@login_required
-	def users_delete(id: int):
-		pass
+	def users_edit_form_get(user_id: int):
+		if user_id == 1:
+			return redirect(url_for("users_get"))
+
+		form = SignUpForm()
+		user = User.load_user(user_id=user_id)
+		if not user:
+			return redirect(url_for("users_get"))
+
+		return render_template("form_edit_user.html", title="Editar Usuário", form=form, user=user, button_text="Salvar")
+
+	@app.delete("/users/<int:user_id>")
+	@login_required
+	def users_delete(user_id: int):
+		if user_id == 1 or user_id == current_user.id:
+			flash("Não é possível excluir a si mesmo", category="warning")
+			return redirect(url_for("users_edit_form_get", user_id=user_id))
+
+		user = User.load_user(user_id=user_id)
+		if not user:
+			flash("Usuário não encontrado", category="warning")
+			return redirect(url_for("users_get"))
+
+		user.deactivate_account()
+		flash(f"Usuário {escape(user.username)} excluído com sucesso", category="success")
+		return redirect(url_for("users_get"))
+
+	@app.route("/users/<int:user_id>", methods=["PUT", "PATCH", "POST"])
+	@login_required
+	def users_put(user_id: int):
+		if user_id == 1:
+			return redirect(url_for("users_get"))
+
+		user = User.load_user(user_id=user_id)
+		if not user:
+			flash("Usuário não encontrado", category="warning")
+			return redirect(url_for("users_get"))
+
+		form = SignUpForm()
+		if not form.validate_on_submit():
+			for field in form.errors.keys():
+				for error in form.errors.get(field):
+					flash(f"{field} error: {error}", "danger")
+			return redirect(url_for("users_edit_form_get", user_id=user_id))
+
+		username = form.username.data
+		email = form.email.data
+
+		user.username = username
+		user.email = email
+
+		flash(f"Usuário {escape(username)} atualizado com sucesso", "success")
+
+		return redirect(url_for("users_get"))

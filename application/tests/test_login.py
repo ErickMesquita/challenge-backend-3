@@ -65,3 +65,15 @@ def test_user_from_db_admin(app):
 	user_admin = User.user_from_db(username_or_email="Admin")
 
 	assert user_admin.email == "admin@email.com.br"
+
+
+def test_user_edit_page(app):
+	user = User.load_user(user_id=1)
+	with app.test_client(user=user) as client:
+		# this request has user 1 already logged in!
+
+		response = client.get(
+			'/users/2',
+			follow_redirects=True
+		)
+	print(response.data.decode(encoding="utf8"))

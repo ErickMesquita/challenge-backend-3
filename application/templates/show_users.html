@@ -16,7 +16,11 @@
 				<td>{{ user.id }}</td>
 				<td>{{ user.username }}</td>
 				<td>{{ user.email }}</td>
-				<td>options</td>
+				<td><a class="btn btn-info" href="{{ url_for('users_edit_form_get', user_id=user.id) }}">Editar</a>
+					{% if user.id != current_user.id %}
+						<a class="btn btn-danger" href="{{ url_for('users_delete', user_id=user.id) }}">Remover</a>
+					{% endif %}
+				</td>
 			</tr>
 			{% endfor %}
 		</tbody>

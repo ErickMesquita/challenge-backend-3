@@ -1,0 +1,35 @@
+{% extends "template_cabecalho.html" %}
+{% block conteudo %}
+        <form method="post" action="{{ url_for('users_put', user_id=user.id) if user else url_for('users_post') }}">
+		{{ form.csrf_token }}
+			<fieldset>
+			<div class="form-group">
+				{{ form.username.label }}
+				{% if user %}
+					{{ form.username(class_="form-control",
+								 value=user.username) }}
+				{% else %}
+					{{ form.username(class_="form-control",
+								 placeholder="Nome de usuário") }}
+				{% endif %}
+				{% for error in form.username.errors %}
+					{{ error }}
+				{% endfor %}
+			</div>
+			<div class="form-group">
+				{{ form.email.label }}
+				{% if user %}
+					{{ form.email(class_="form-control",
+								 value=user.email) }}
+				{% else %}
+					{{ form.email(class_="form-control",
+								 placeholder="Endereço de email") }}
+				{% endif %}
+				{% for error in form.email.errors %}
+					{{ error }}
+				{% endfor %}
+			</div>
+			<button type="submit" class="btn btn-primary">{{ button_text }}</button>
+			</fieldset>
+		</form>
+{% endblock %}

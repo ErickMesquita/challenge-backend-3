@@ -3,6 +3,9 @@ import pytest
 from datetime import datetime
 from decimal import Decimal
 import os
+
+from flask_login import FlaskLoginClient
+
 from application.app import create_app
 from application.controller.routes import configure_routes
 from application.models import db, login_manager
@@ -14,6 +17,7 @@ def app():
 	configure_routes(app)
 	db.init_app(app)
 	login_manager.init_app(app)
+	app.test_client_class = FlaskLoginClient
 	db.app = app
 	yield app
 

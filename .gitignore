@@ -1,3 +1,4 @@
 *__pycache__*
 .idea
 application/uploads/*
+user_passwords.txt

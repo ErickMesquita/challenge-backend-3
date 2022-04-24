@@ -44,8 +44,14 @@ class User(UserMixin, db.Model):
 
 	@staticmethod
 	@login_manager.user_loader
-	def load_user(user_id):
-		query = db.select(User).where(User.login_id == user_id)
+	def load_user(login_id: int = None, user_id: int = None):
+		if login_id is not None:
+			query = db.select(User).where(User.login_id == login_id)
+		elif user_id is not None:
+			query = db.select(User).where(User.id == user_id)
+		else:
+			return None
+
 		return db.session.scalars(query).first()
 
 	@staticmethod
@@ -121,7 +127,7 @@ class User(UserMixin, db.Model):
 		if username is None or email is None:
 			return False, "Nome de usuário ou email inválidos"
 
-		check_list = cls.check_existing_user(username, email)
+		check_list = cls.check_existing_users(username, email)
 
 		if "Error" in check_list:
 			return False, "Nome de usuário ou email já cadastrado"
