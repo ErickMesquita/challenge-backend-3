@@ -31,6 +31,7 @@ class DevelopmentConfig(Config):
 	"""Development configuration"""
 	SECRET_KEY = "senha123"
 
+
 class TestingConfig(Config):
 	"""Testing configuration"""
 	SECRET_KEY = "senha123"

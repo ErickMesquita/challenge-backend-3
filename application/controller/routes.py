@@ -1,14 +1,12 @@
 import os
-from base64 import b64decode, b64encode
 from urllib.parse import urlparse, urljoin
 
-from flask import redirect, render_template, url_for, request, flash, Flask, session, abort
+from flask import redirect, render_template, url_for, request, flash, Flask, abort
 from flask_login import login_user, login_required, logout_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
-from application.controller import user_utils as u_utils
-from application.controller.forms import LoginForm, SignUpForm
-from hashlib import sha512
+from application.models.forms import LoginForm, SignUpForm
+from application.models.user import User, check_password_hash
 
 
 def is_safe_url(target):
@@ -18,9 +16,6 @@ def is_safe_url(target):
 
 
 def configure_routes(app: Flask):
-	@app.get("/teste")
-	def _teste():
-		return "<h1>Teste</h1><h4>Funciona!!!</h4>"
 
 	@app.get("/forms/transaction")
 	@login_required
@@ -76,12 +71,12 @@ def configure_routes(app: Flask):
 		if not form.validate_on_submit():
 			return render_template("form_login.html", title="Login", form=form)
 
-		user = u_utils.user_from_db(username_or_email=form.username_or_email.data)
+		user = User.user_from_db(username_or_email=form.username_or_email.data)
 
 		if user is None or not user.active:
 			return login_invalid("Nome de usuário ou email inválido", "danger")
 
-		if not u_utils.check_password_hash(user.password, form.password.data):
+		if not check_password_hash(user.password, form.password.data):
 			return login_invalid("Senha inválida", "danger")
 
 		login_user(user)
@@ -92,6 +87,8 @@ def configure_routes(app: Flask):
 
 		next_url = request.args.get('next')
 
+		if next_url == "/logout":
+			return redirect(url_for("transactions_get_form"))
 		if not is_safe_url(next_url):
 			return abort(400)
 		return redirect(next_url)
@@ -101,30 +98,46 @@ def configure_routes(app: Flask):
 		return redirect(url_for("login", next=request.args.get("next")))
 
 	@app.get("/logout")
+	@login_required
 	def logout():
 		logout_user()
-		flash(f"Usuário saiu com sucesso!")
-		return redirect(url_for("_teste"))
+		flash(f"Usuário saiu com sucesso!", category="info")
+		return redirect(url_for("login"))
 
 	@app.get("/forms/signup")
+	@login_required
 	def signup_form_get():
 		form = SignUpForm()
-		return render_template("form_signup.html", title="Sign Up", form=form)
+		return render_template("form_signup.html", title="CADASTRAR USUÁRIO", form=form)
 
 	@app.post("/users")
+	@login_required
 	def users_post():
 		form = SignUpForm()
 		if not form.validate_on_submit():
+			for field in form.errors.keys():
+				for error in form.errors.get(field):
+					flash(f"{field} error: {error}", "danger")
 			return redirect(url_for("signup_form_get"))
 
 		username = form.username.data
 		email = form.email.data
 
-		success, message = u_utils.create_new_user(username, email)
+		success, message = User.create_user(username, email)
 
 		if not success:
 			flash(message, "danger")
 		else:
-			flash(f"Senha: {message}")
+			flash(f"Senha: {message}", "success")
 
 		return redirect(url_for("login"))
+
+	@app.get("/users")
+	@login_required
+	def users_get():
+		return render_template("show_users.html", title="USUÁRIOS CADASTRADOS")
+
+	@app.delete("/users/<int:id>")
+	@login_required
+	def users(id: int):
+		pass

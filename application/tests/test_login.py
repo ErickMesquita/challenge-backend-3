@@ -1,10 +1,7 @@
-from hashlib import sha512
-from secrets import randbelow
-
 import pytest
 from .pytest_fixtures import app, client
 from ..models import bcrypt
-from application.controller import user_utils as u_utils
+from ..models.user import User, hash_password, check_password_hash
 
 
 def test_response_200_when_access_loginpage(client):
@@ -37,10 +34,11 @@ def test_signup_malformed_credentials(client, username, email, message):
 		data={'username': username, 'email': email},
 		follow_redirects=True
 	)
-	assert message in response.data.decode(encoding="utf8")
+	response_html = response.data.decode(encoding="utf8")
+	assert message in response_html
 
 
-def test_signup_with_credentials_ok(client):
+def test_signup_with_new_credentials_ok(client):
 	response = client.post(
 		'/users',
 		data={'username': "teste", 'email': "teste@exemple.com"},
@@ -50,14 +48,20 @@ def test_signup_with_credentials_ok(client):
 	assert "Error" not in response.data.decode(encoding="utf8")
 
 
-def test_userutils_hash_creation_and_checking():
+def test_hash_creation_and_checking():
 	"""
 	"782358" generates a SHA512 hash with a NIL byte, which breaks Bcrypt
 	"""
 	correct_password = "782358"
 	wrong_password = "wrong_password"
 
-	hashed = u_utils.hash_password(correct_password)
+	hashed = hash_password(correct_password)
 
-	assert u_utils.check_password_hash(hashed, correct_password)
-	assert not u_utils.check_password_hash(hashed, wrong_password)
+	assert check_password_hash(hashed, correct_password)
+	assert not check_password_hash(hashed, wrong_password)
+
+
+def test_user_from_db_admin(app):
+	user_admin = User.user_from_db(username_or_email="Admin")
+
+	assert user_admin.email == "admin@email.com.br"
