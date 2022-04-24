@@ -163,3 +163,10 @@ def check_password_hash(user_password_hash: str, candidate_password: str) -> boo
 	candidate_sha512_safe = candidate_sha512.replace(b"\x00", b"\x45")  # Bytes # Avoid bcrypt ValueError
 
 	return bcrypt_check_password_hash(user_password_hash, candidate_sha512_safe)
+
+
+def get_users_list() -> list:
+	query = db.select(User). \
+		where(User.username != "Admin")
+
+	return db.session.scalars(query).all()

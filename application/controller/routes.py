@@ -6,7 +6,7 @@ from flask_login import login_user, login_required, logout_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
 from application.models.forms import LoginForm, SignUpForm
-from application.models.user import User, check_password_hash
+from application.models.user import User, check_password_hash, get_users_list
 
 
 def is_safe_url(target):
@@ -135,9 +135,9 @@ def configure_routes(app: Flask):
 	@app.get("/users")
 	@login_required
 	def users_get():
-		return render_template("show_users.html", title="USUÁRIOS CADASTRADOS")
+		return render_template("show_users.html", title="Usuários Cadastrados", users_list=get_users_list())
 
 	@app.delete("/users/<int:id>")
 	@login_required
-	def users(id: int):
+	def users_delete(id: int):
 		pass
