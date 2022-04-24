@@ -128,7 +128,3 @@ def configure_routes(app: Flask):
 			flash(f"Senha: {message}")
 
 		return redirect(url_for("login"))
-
-
-
-

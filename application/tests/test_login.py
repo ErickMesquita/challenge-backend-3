@@ -4,6 +4,7 @@ from secrets import randbelow
 import pytest
 from .pytest_fixtures import app, client
 from ..models import bcrypt
+from application.controller import user_utils as u_utils
 
 
 def test_response_200_when_access_loginpage(client):
@@ -49,20 +50,14 @@ def test_signup_with_credentials_ok(client):
 	assert "Error" not in response.data.decode(encoding="utf8")
 
 
-def test_hash():
-	#password = str(randbelow(1000000)).zfill(6)
-	password = "782358"
-	print(f"password={password}")
-	sha512hash = sha512(password.encode("utf-8")).digest()  # Bytes
-	print(f"sha512hash={sha512hash}")
-	print(f"len(sha512hash)={len(sha512hash)}")
-	print(f"type(sha512hash)={type(sha512hash)}")
-	sha512hash_nilsafe = sha512hash.replace(b"\x00", b"\x45")  # Bytes
-	print(f"len(sha512hash_nilsafe)={len(sha512hash_nilsafe)}")
-	print(f"type(sha512hash_nilsafe)={type(sha512hash_nilsafe)}")
-	enc_password = bcrypt.generate_password_hash(sha512hash_nilsafe)  # Bytes
-	print(f"len(enc_password)={len(enc_password)}")
-	print(f"type(enc_password)={type(enc_password)}")
-	enc_password_str = str(enc_password, encoding="utf8")
-	print(f"len(enc_password_str)={len(enc_password_str)}")
-	print(f"type(enc_password_str)={type(enc_password_str)}")
+def test_userutils_hash_creation_and_checking():
+	"""
+	"782358" generates a SHA512 hash with a NIL byte, which breaks Bcrypt
+	"""
+	correct_password = "782358"
+	wrong_password = "wrong_password"
+
+	hashed = u_utils.hash_password(correct_password)
+
+	assert u_utils.check_password_hash(hashed, correct_password)
+	assert not u_utils.check_password_hash(hashed, wrong_password)

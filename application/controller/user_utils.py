@@ -27,8 +27,10 @@ def create_new_user(username: str, email: str) -> (bool, str):
 	if username is None or email is None:
 		return False, "Nome de usuário ou email inválidos"
 
-	password = str(randbelow(1000000)).zfill(6)
+	if check_existing_user(username, email):
+		return False, "Nome de usuário ou email já cadastrado"
 
+	password = str(randbelow(1000000)).zfill(6)
 
 	user = User(username=username,
 				password=hash_password(password),
@@ -42,9 +44,20 @@ def create_new_user(username: str, email: str) -> (bool, str):
 		db.session.commit()
 	except Exception as e:
 		print(e)
-		return False, ""
+		return False, "Erro desconhecido"
 
 	return True, password
+
+
+def check_existing_user(username: str, email: str) -> bool:
+	if username is None and email is None:
+		return False
+
+	query = db.select(User).where(
+		db.or_(User.username == username,
+			   User.email == email)
+	)
+	return db.session.scalars(query).first() is not None
 
 
 def hash_password(password: str) -> str:

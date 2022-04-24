@@ -21,6 +21,7 @@ class SignUpForm(FlaskForm):
 		]
 	)
 
+"""
 	@staticmethod
 	def validate_email(form, field):
 		query = db.select(User).where(User.email == field.data)
@@ -32,7 +33,7 @@ class SignUpForm(FlaskForm):
 		query = db.select(User).where(User.username == field.data)
 		if db.session.scalars(query).first():
 			raise ValidationError("Username already taken!")
-
+"""
 
 class LoginForm(FlaskForm):
 	username_or_email = StringField(
