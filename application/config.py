@@ -36,3 +36,5 @@ class TestingConfig(Config):
 	SECRET_KEY = "senha123"
 	TESTING = True
 	SQLALCHEMY_TRACK_MODIFICATIONS = True
+	WTF_CSRF_CHECK_DEFAULT = False
+	WTF_CSRF_ENABLED = False

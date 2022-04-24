@@ -1,13 +1,14 @@
 import os
+from base64 import b64decode, b64encode
 from urllib.parse import urlparse, urljoin
 
 from flask import redirect, render_template, url_for, request, flash, Flask, session, abort
-from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
 from application.controller import user_utils as u_utils
 from application.controller.forms import LoginForm, SignUpForm
+from hashlib import sha512
 
 
 def is_safe_url(target):
@@ -80,7 +81,7 @@ def configure_routes(app: Flask):
 		if user is None or not user.active:
 			return login_invalid("Nome de usuário ou email inválido", "danger")
 
-		if not check_password_hash(user.password, form.password.data):
+		if not u_utils.check_password_hash(user.password, form.password.data):
 			return login_invalid("Senha inválida", "danger")
 
 		login_user(user)
@@ -111,7 +112,6 @@ def configure_routes(app: Flask):
 		return render_template("form_signup.html", title="Sign Up", form=form)
 
 	@app.post("/users")
-	@login_required
 	def users_post():
 		form = SignUpForm()
 		if not form.validate_on_submit():
