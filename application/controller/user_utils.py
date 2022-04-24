@@ -1,7 +1,7 @@
 from application.models import db, User, login_manager, bcrypt
 from secrets import randbelow
 from hashlib import sha512
-from flask_bcrypt import check_password_hash
+from flask_bcrypt import check_password_hash as bcrypt_check_password_hash
 
 
 def user_from_db(username_or_email=None, **kwargs):
@@ -59,4 +59,4 @@ def check_password_hash(user_password_hash: str, candidate_password: str) -> boo
 	candidate_sha512 = sha512(candidate_password.encode("utf-8")).digest()  # Bytes
 	candidate_sha512_safe = candidate_sha512.replace(b"\x00", b"\x45")  # Bytes # Avoid bcrypt ValueError
 
-	return check_password_hash(user_password_hash, candidate_sha512_safe)
+	return bcrypt_check_password_hash(user_password_hash, candidate_sha512_safe)
