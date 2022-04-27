@@ -5,10 +5,16 @@ from secrets import randbelow
 
 
 def generate_password() -> str:
+	"""
+	Generates a random 6-digits number and returns it as a string.
+	"""
 	return str(randbelow(1000000)).zfill(6)
 
 
 def hash_password(password: str) -> str:
+	"""
+	Receives a password string, gets its SHA-512 hash, then encrypts it with bcrypt
+	"""
 	sha512hash = sha512(password.encode("utf-8")).digest()  # Bytes
 	sha512hash_nilsafe = sha512hash.replace(b"\x00", b"\x45")  # This avoids bcrypt ValueError
 	enc_password = bcrypt.generate_password_hash(sha512hash_nilsafe)  # Bytes
