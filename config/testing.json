@@ -7,7 +7,7 @@
 	"POSTGRES_USER": "postgres",
 	"POSTGRES_PASSWORD": "senha123",
 	"POSTGRES_LANG": "pt_BR.utf8",
-	"POSTGRES_HOSTNAME": "192.168.56.102",
+	"POSTGRES_HOSTNAME": "localhost",
 	"POSTGRES_PORT": "5433",
 	"DB_ENCODING": "utf8",
 	"DB_ECHO": "1",

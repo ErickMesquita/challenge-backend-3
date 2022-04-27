@@ -17,7 +17,7 @@ def setenv(variable, default):
 	os.environ[variable] = os.getenv(variable, default)
 
 
-setenv("APPLICATION_CONFIG", default="testing")
+setenv("APPLICATION_CONFIG", default="development")
 
 
 @click.group()

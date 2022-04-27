@@ -134,7 +134,7 @@ def configure_routes(app: Flask):
 			return redirect(url_for("signup_form_get"))
 
 		flash(f"Senha: {password}", "success")
-		return redirect(url_for("login"))
+		return redirect(url_for("users_get"))
 
 	@app.get("/users")
 	@login_required

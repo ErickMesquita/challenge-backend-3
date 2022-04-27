@@ -26,32 +26,6 @@ def test_login_malformed_credentials(client, username, password, message):
 	assert message in response.data.decode(encoding="utf8")
 
 
-@pytest.mark.parametrize(('username', 'email', 'message'), (
-		('', '', "Digite um nome de usuário"),
-		('a', '', "Digite um email"),
-		('a', 'not-an-email', "Email inválido"),
-))
-def test_signup_malformed_credentials(logged_in_client, username, email, message):
-	response = logged_in_client.post(
-		'/users',
-		data={'username': username, 'email': email},
-		follow_redirects=True
-	)
-	response_html = response.data.decode(encoding="utf8")
-	#print(response_html)
-
-	assert message in response_html
-
-
-def test_signup_with_new_credentials_ok(logged_in_client):
-	response = logged_in_client.post(
-		'/users',
-		data={'username': "teste", 'email': "teste@exemple.com"},
-		follow_redirects=True
-	)
-	#print(response.data.decode(encoding="utf8"))
-	assert "Error" not in response.data.decode(encoding="utf8")
-
 
 def test_hash_creation_and_checking():
 	"""
@@ -72,16 +46,6 @@ def test_user_from_db_admin(app):
 	assert user_admin.email == "admin@email.com.br"
 
 
-def test_user_edit_page(app):
-	user = u_utils.load_user_from_id(user_id=1)
-	with app.test_client(user=user) as client:
-		# this request has user 1 already logged in!
-
-		response = client.get(
-			'/users/2',
-			follow_redirects=True
-		)
-	print(response.data.decode(encoding="utf8"))
 
 
 def test_admin_creation_and_checking():

@@ -52,5 +52,8 @@ function delete_user_by_id(user_id){
     };
     http.delete(url, callback)
     document.getElementById(user_id).remove()
-    window.location.reload(true)
+    setTimeout(function(){
+        window.location.reload();
+    },1000);
+
 }
