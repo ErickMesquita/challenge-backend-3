@@ -4,8 +4,10 @@ import pandas as pd
 import datetime
 from decimal import Decimal
 from numpy import nan
-from application.models import db, BankAccount, Transaction
+from application.models import db, BankAccount, Transaction, TransactionsFile
 from sqlalchemy.exc import IntegrityError
+
+from application.models.user import User
 
 
 def decimal_from_value(value):
@@ -14,7 +16,7 @@ def decimal_from_value(value):
 	return Decimal(value)
 
 
-def clean_uploaded_transactions_csv(file_or_path) -> (pd.DataFrame, str):
+def clean_uploaded_transactions_csv(file_or_path) -> ((pd.DataFrame, datetime.datetime), str):
 	columns_names_list = ["Banco origem",
 						  "Agência origem",
 						  "Conta origem",
@@ -44,10 +46,10 @@ def clean_uploaded_transactions_csv(file_or_path) -> (pd.DataFrame, str):
 	if not df.empty and (df["Data e hora"].iloc[0] is None or
 						 df["Data e hora"].iloc[0] == "" or
 						 df["Data e hora"].iloc[0] is pd.NaT):
-		return None, "Error: Invalid Date"
+		return None, None, "Error: Invalid Date"
 
 	if df.empty:
-		return None, "Error: Empty File"
+		return None, None, "Error: Empty File"
 
 	first_date = df["Data e hora"].iloc[0].date()
 
@@ -55,7 +57,7 @@ def clean_uploaded_transactions_csv(file_or_path) -> (pd.DataFrame, str):
 
 	df = df[df["Data e hora"].apply(lambda x: x.date()) == first_date]
 
-	return df, ""
+	return df, first_date, ""
 
 
 def bank_account_id_from_database(bk: BankAccount = None, bank=None, branch=None, account=None):
@@ -114,12 +116,18 @@ def push_bank_accounts_to_database(df: pd.DataFrame):
 			db.session.rollback()
 
 
-def push_transactions_to_db(df: pd.DataFrame):
+def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: User, filepath: str):
 	if df.empty:
 		return
 
 	if not db.inspect(db.engine).has_table("transaction"):
 		db.create_all()
+
+	t_file = TransactionsFile(transactions_date=date,
+							  csv_filepath=filepath,
+							  upload_datetime=datetime.datetime.now(),
+							  user_id=user.id)
+	db.session.add(t_file)
 
 	for index, row in df.iterrows():
 		sender_id = bank_account_id_from_database(bank=row["Banco origem"],
@@ -132,7 +140,7 @@ def push_transactions_to_db(df: pd.DataFrame):
 													 account=row["Conta destino"])
 		df.loc[index, "recipient_id"] = recipient_id
 
-		transaction = Transaction(sender_id=sender_id, recipient_id=recipient_id,
+		transaction = Transaction(sender_id=sender_id, recipient_id=recipient_id, file=t_file,
 								  amount=row["Valor"], date_and_time=row["Data e hora"])
 
 		db.session.add(transaction)

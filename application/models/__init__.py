@@ -33,14 +33,22 @@ class Transaction(db.Model):
 	amount		  = db.Column(db.Numeric, nullable=False)
 	date_and_time = db.Column(db.DateTime, nullable=False)
 
+	file_id = db.Column(db.Integer, db.ForeignKey('transactions_file.id'))
+	file = db.relationship("TransactionsFile", back_populates="transactions")
+
 	def __repr__(self):
 		return f'<Transaction #{self.id}>'
 
 
 class TransactionsFile(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	transactions_date = db.Column(db.Date, nullable=False)
+	transactions_date = db.Column(db.Date, unique=True, nullable=False)
 	csv_filepath = db.Column(db.Text, nullable=False)
 	upload_datetime = db.Column(db.DateTime, nullable=False)
+
+	user_id	 = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	user	  = db.relationship("User", foreign_keys=[user_id])
+
+	transactions = db.relationship("Transaction", back_populates="file")
 
 

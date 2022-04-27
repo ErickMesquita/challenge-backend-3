@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, PasswordField, EmailField
 from wtforms.validators import InputRequired, Length, NoneOf, Email
 
@@ -26,3 +27,12 @@ class LoginForm(FlaskForm):
 		validators=[InputRequired(message="Digite seu nome de usuário ou email"), Length(1, 80)]
 	)
 	password = PasswordField(label="Senha", validators=[InputRequired(message="Digite sua senha"), Length(min=6, max=6, message="A senha deve ter 6 caracteres")])
+
+
+class TransactionUploadForm(FlaskForm):
+	file = FileField(
+		label="Upload da Transação",
+		validators=[FileRequired(),
+					FileAllowed(upload_set=["csv", "xml"],
+					message="Apenas arquivos CSV e XML")]
+	)

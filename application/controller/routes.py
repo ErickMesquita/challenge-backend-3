@@ -5,7 +5,7 @@ from flask import redirect, render_template, url_for, request, flash, Flask, abo
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
-from application.models.forms import LoginForm, SignUpForm
+from application.models.forms import LoginForm, SignUpForm, TransactionUploadForm
 from application.models.user import User
 from application.controller.password_utils import check_password_hash
 from application.controller.user_utils import get_users_list, user_from_db, edit_user_account, \
@@ -24,7 +24,8 @@ def configure_routes(app: Flask):
 	@app.get("/forms/transaction")
 	@login_required
 	def transactions_get_form():
-		return render_template("form_transactions.html", title="Importar Transações")
+		form = TransactionUploadForm()
+		return render_template("form_transactions.html", title="Importar Transações", form=form)
 
 	def allowed_file(filename):
 		return '.' in filename and \
@@ -32,36 +33,32 @@ def configure_routes(app: Flask):
 
 	@app.post("/transaction")
 	def transactions_post():
-		if 'file' not in request.files:
-			flash('Nenhum arquivo enviado')
+		form = TransactionUploadForm()
+
+		if not form.validate_on_submit():
 			return redirect(url_for("transactions_get_form"), 303)
 
-		file = request.files["file"]
-
-		if file.filename == "":
-			flash('Nenhum arquivo selecionado')
-			return redirect(url_for("transactions_get_form"), 303)
-
-		if not allowed_file(file.filename):
-			flash('Extensão inválida')
-			return redirect(url_for("transactions_get_form"), 303)
+		file = form.file.data
 
 		filename = secure_filename(file.filename)
-		file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-		print(file_path)
-		file.save(file_path)
-		print(f"Arquivo chegando - filename = {file.filename} - filesize = {os.path.getsize(file_path)} Bytes")
-		print(f'Conteúdo: {open(file_path, "r", encoding="UTF-8").read()}')
-		flash(f"Arquivo chegando - filename = {file.filename} - filesize = {os.path.getsize(file_path)} Bytes")
+		directory_path = os.path.join(app.config['UPLOAD_FOLDER'], str(current_user.id))
 
-		df, error = t_utils.clean_uploaded_transactions_csv(file_path)
+		if not os.path.exists(directory_path):
+			os.mkdir(directory_path)
+
+		file_path = os.path.join(directory_path, filename)
+
+		file.save(file_path)
+
+		df, date, error = t_utils.clean_uploaded_transactions_csv(file_path)
 
 		if error:
-			flash(error)
+			flash(error, category="warning")
 			return redirect(url_for("transactions_get_form"), 303)
 
-		t_utils.push_transactions_to_db(df)
+		t_utils.push_transactions_to_db(df, date, current_user, file_path)
 
+		flash(f"Upload das transações do dia {date} bem sucedido", category="success")
 		return redirect(url_for("transactions_get_form"), 302)
 
 	@app.get("/transactions")

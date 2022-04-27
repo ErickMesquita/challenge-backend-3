@@ -1,11 +1,14 @@
 {% extends "template_cabecalho.html" %}
 {% block conteudo %}
 	<form method="post" action="{{ url_for('transactions_post') }}" enctype="multipart/form-data">
-		<div class="mb-3">
-			<label for="file" class="form-label">Upload da Transação</label>
-			<input class="form-control" type="file" id="file" name="file" accept="text/csv" aria-describedby="fileHelp">
-			<div id="fileHelp" class="form-text">Apenas arquivos CSV</div>
-		</div>
-		<button type="submit" class="btn btn-primary btn-save">Salvar</button>
+		{{ form.csrf_token }}
+		<fieldset>
+			<div class="form-group">
+				{{ form.file.label }}
+				{{ form.file(class_="form-control", aria_describedby="fileHelp") }}
+				<div id="fileHelp" class="form-text">Apenas arquivos CSV ou XML</div>
+			</div>
+			<button type="submit" class="btn btn-primary">Salvar</button>
+		</fieldset>
 	</form>
 {% endblock %}

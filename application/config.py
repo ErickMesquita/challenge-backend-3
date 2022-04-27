@@ -1,4 +1,5 @@
 import os
+import secrets
 
 
 class Config(object):
@@ -20,11 +21,12 @@ class Config(object):
 	f"postgresql://{user}:{password}@{host}:{port}/{database}"
 
 	UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
-	ALLOWED_EXTENSIONS = {"csv"}
+	ALLOWED_EXTENSIONS = ["csv", "xml"]
 
 
 class ProductionConfig(Config):
 	"""Production configuration"""
+	SECRET_KEY = secrets.token_hex(256)
 
 
 class DevelopmentConfig(Config):
