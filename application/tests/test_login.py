@@ -77,3 +77,17 @@ def test_user_edit_page(app):
 			follow_redirects=True
 		)
 	print(response.data.decode(encoding="utf8"))
+
+
+def test_admin_creation_and_checking():
+	"""
+	"123999" generates a SHA512 hash with a NIL byte, which breaks Bcrypt
+	"""
+	correct_password = "123999"
+	wrong_password = "wrong_password"
+
+	hashed = hash_password(correct_password)
+	print(hashed)
+
+	assert check_password_hash(hashed, correct_password)
+	assert not check_password_hash(hashed, wrong_password)

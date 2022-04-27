@@ -6,8 +6,11 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
 from application.models.forms import LoginForm, SignUpForm
-from application.models.user import User, check_password_hash, get_users_list
-from html import escape
+from application.models.user import User
+from application.controller.password_utils import check_password_hash
+from application.controller.user_utils import get_users_list, user_from_db, edit_user_account, \
+	create_or_reactivate_user, load_user_from_id
+from markupsafe import escape
 
 
 def is_safe_url(target):
@@ -72,7 +75,7 @@ def configure_routes(app: Flask):
 		if not form.validate_on_submit():
 			return render_template("form_login.html", title="Login", form=form)
 
-		user = User.user_from_db(username_or_email=form.username_or_email.data)
+		user = user_from_db(username_or_email=form.username_or_email.data)
 
 		if user is None or not user.active:
 			return login_invalid("Nome de usuário ou email inválido", "danger")
@@ -124,13 +127,13 @@ def configure_routes(app: Flask):
 		username = form.username.data
 		email = form.email.data
 
-		success, message = User.create_user(username, email)
+		password, error = create_or_reactivate_user(username, email)
 
-		if not success:
-			flash(message, "danger")
-		else:
-			flash(f"Senha: {message}", "success")
+		if error:
+			flash(error, "danger")
+			return redirect(url_for("signup_form_get"))
 
+		flash(f"Senha: {password}", "success")
 		return redirect(url_for("login"))
 
 	@app.get("/users")
@@ -145,7 +148,7 @@ def configure_routes(app: Flask):
 			return redirect(url_for("users_get"))
 
 		form = SignUpForm()
-		user = User.load_user(user_id=user_id)
+		user = load_user_from_id(user_id=user_id)
 		if not user:
 			return redirect(url_for("users_get"))
 
@@ -158,7 +161,7 @@ def configure_routes(app: Flask):
 			flash("Não é possível excluir a si mesmo", category="warning")
 			return redirect(url_for("users_edit_form_get", user_id=user_id))
 
-		user = User.load_user(user_id=user_id)
+		user = load_user_from_id(user_id=user_id)
 		if not user:
 			flash("Usuário não encontrado", category="warning")
 			return redirect(url_for("users_get"))
@@ -173,7 +176,8 @@ def configure_routes(app: Flask):
 		if user_id == 1:
 			return redirect(url_for("users_get"))
 
-		user = User.load_user(user_id=user_id)
+		user = load_user_from_id(user_id=user_id)
+
 		if not user:
 			flash("Usuário não encontrado", category="warning")
 			return redirect(url_for("users_get"))
@@ -185,12 +189,14 @@ def configure_routes(app: Flask):
 					flash(f"{field} error: {error}", "danger")
 			return redirect(url_for("users_edit_form_get", user_id=user_id))
 
-		username = form.username.data
-		email = form.email.data
+		new_username = form.username.data
+		new_email = form.email.data
 
-		user.username = username
-		user.email = email
+		success_message, error = edit_user_account(user_id, new_username, new_email)
 
-		flash(f"Usuário {escape(username)} atualizado com sucesso", "success")
+		if error:
+			flash(error, "danger")
+			return redirect(url_for("users_get"))
 
+		flash(success_message, "success")
 		return redirect(url_for("users_get"))

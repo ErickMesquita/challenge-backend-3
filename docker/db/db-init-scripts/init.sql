@@ -1,1 +1,2 @@
 ﻿CREATE DATABASE "application" ENCODING 'UTF8';
+

@@ -4,6 +4,8 @@ Obtido de: https://www.thedigitalcatonline.com/blog/2020/07/05/flask-project-set
 """
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
 from manage import configure_app
 
 
@@ -23,6 +25,8 @@ def create_app(config_name: str) -> Flask:
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
+    create_admin(db)
+
     login_manager.login_view = "login"
     login_manager.login_message = "Por favor, faça login para continuar"
     login_manager.login_message_category = "warning"
@@ -32,3 +36,17 @@ def create_app(config_name: str) -> Flask:
         return "Hello, World!"
 
     return app
+
+
+def create_admin(db: SQLAlchemy):
+    from application.models.user import User
+    admin = User(username="Admin",
+                 password="$2b$12$Iqh8RlvTanfs3GAKSwQXy.zXfz5B9rQ7t1cxPTPJGI3MehjWwW2Jq",
+                 email="admin@email.com.br",
+                 active=True
+    )
+    db.session.add(admin)
+    try:
+        db.session.commit()
+    except Exception:
+        pass

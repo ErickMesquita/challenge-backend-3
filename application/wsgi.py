@@ -1,5 +1,5 @@
 from os import getenv
-from application.app import create_app
+from application.app import create_app, create_admin
 from application.controller.routes import configure_routes
 from application import models
 from flask_migrate import upgrade, migrate, init, stamp
@@ -10,4 +10,5 @@ configure_routes(app)
 
 with app.app_context():
 	models.db.create_all()
+
 
