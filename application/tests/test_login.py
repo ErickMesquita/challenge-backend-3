@@ -1,7 +1,10 @@
 import pytest
-from .pytest_fixtures import app, client
-from ..models import bcrypt
-from ..models.user import User, hash_password, check_password_hash
+
+from application.controller.user_utils import user_from_db
+from application.tests.pytest_fixtures import app, client, logged_in_client
+from application.controller.password_utils import hash_password, check_password_hash
+from application.models.user import User
+from application.controller import user_utils as u_utils
 
 
 def test_response_200_when_access_loginpage(client):
@@ -28,23 +31,25 @@ def test_login_malformed_credentials(client, username, password, message):
 		('a', '', "Digite um email"),
 		('a', 'not-an-email', "Email inválido"),
 ))
-def test_signup_malformed_credentials(client, username, email, message):
-	response = client.post(
+def test_signup_malformed_credentials(logged_in_client, username, email, message):
+	response = logged_in_client.post(
 		'/users',
 		data={'username': username, 'email': email},
 		follow_redirects=True
 	)
 	response_html = response.data.decode(encoding="utf8")
+	#print(response_html)
+
 	assert message in response_html
 
 
-def test_signup_with_new_credentials_ok(client):
-	response = client.post(
+def test_signup_with_new_credentials_ok(logged_in_client):
+	response = logged_in_client.post(
 		'/users',
 		data={'username': "teste", 'email': "teste@exemple.com"},
 		follow_redirects=True
 	)
-	print(response.data.decode(encoding="utf8"))
+	#print(response.data.decode(encoding="utf8"))
 	assert "Error" not in response.data.decode(encoding="utf8")
 
 
@@ -62,13 +67,13 @@ def test_hash_creation_and_checking():
 
 
 def test_user_from_db_admin(app):
-	user_admin = User.user_from_db(username_or_email="Admin")
+	user_admin = user_from_db(username_or_email="Admin")
 
 	assert user_admin.email == "admin@email.com.br"
 
 
 def test_user_edit_page(app):
-	user = User.load_user(user_id=1)
+	user = u_utils.load_user_from_id(user_id=1)
 	with app.test_client(user=user) as client:
 		# this request has user 1 already logged in!
 

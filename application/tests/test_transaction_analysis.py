@@ -3,8 +3,8 @@ import os
 import pandas as pd
 from numpy import datetime64
 
-from .pytest_fixtures import resources_path
-from application.controller.transaction_analysis import clean_uploaded_transactions_csv
+from application.tests.pytest_fixtures import resources_path
+from application.controller.transactions_utils import clean_uploaded_transactions_csv
 
 
 def test_ignore_csv_rows_with_different_dates_than_first_one(resources_path):

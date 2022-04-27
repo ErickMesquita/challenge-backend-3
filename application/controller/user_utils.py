@@ -99,7 +99,7 @@ class ReactivateUserStrategy(UserCreationStrategy):
 		if not username:
 			return None, "Nome de usuário inválido"
 
-		user = user_from_db(username=username)
+		user = user_from_db(username=username, active_only=False)
 
 		if not user:
 			return None, "Não foi possível reativar a conta"
@@ -180,18 +180,13 @@ def create_or_reactivate_user(username: str, email: str) -> (Union[str, None], U
 	return password, None
 
 
-def edit_user_account(user_id: int, new_username: str = None, new_email: str = None)\
+def edit_user_account(current_user: User, new_username: str = None, new_email: str = None)\
 											-> (Union[str, None], Union[str, None]):
-	if not user_id:
+	if not current_user:
 		return None, "Usuário não encontrado"
 
 	if not new_username and not new_email:
 		return "Salvo com sucesso", None
-
-	current_user = load_user_from_id(user_id=user_id)
-
-	if not current_user:
-		return None, "Usuário não encontrado"
 
 	if not new_username:
 		new_username = current_user.username
@@ -199,12 +194,19 @@ def edit_user_account(user_id: int, new_username: str = None, new_email: str = N
 	if not new_email:
 		new_email = current_user.email
 
+	if new_email != current_user.email and not email_available(new_email):
+		return None, "Email indisponível"
+
 	matching_users_list = list_matching_users(new_username, new_email)
+
+	print(f"matching_users_list={matching_users_list}")
+	print(f"current_user in matching_users_list = {current_user in matching_users_list}")
 
 	if current_user in matching_users_list:
 		matching_users_list.remove(current_user)
 
 	strategy = get_edit_strategy_from_conflicting_users_list(matching_users_list, new_username, current_user.username)
+	print(f"strategy={strategy}")
 
 	return strategy.execute(current_user, new_username, new_email)
 
@@ -246,8 +248,6 @@ class NewAvailableUsernameStrategy(UserEditStrategy):
 
 		if not new_email:
 			new_email = current_user.email
-		elif not email_available(new_email):
-			return None, "Email indisponível"
 
 		current_user.username = new_username
 		current_user.email = new_email
@@ -273,11 +273,6 @@ class InactiveUsernameStrategy(UserEditStrategy):
 			return None, "Nenhuma conta desativada foi encontrada, tente criar uma nova conta"
 
 		new_user = matching_inactive_accounts[0]
-
-		if not new_email:
-			new_email = current_user.email
-		elif not email_available(new_email):
-			return None, "Email indisponível"
 
 		new_user.email = new_email
 		new_user.login_id = current_user.login_id
@@ -323,11 +318,14 @@ def email_available(new_email: str) -> bool:
 	return True
 
 
-def get_users_list(include_admin: bool = False) -> list:
+def get_users_list(include_admin: bool = False, active: bool = True) -> list:
 	query = db.select(User)
 
 	if not include_admin:
 		query = query.where(User.username != "Admin")
+
+	if active is not None:
+		query = query.where(User.active == active)
 
 	return db.session.scalars(query).all()
 

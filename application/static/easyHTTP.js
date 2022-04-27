@@ -23,7 +23,7 @@ easyHTTP.prototype.delete = function (url, callback) {
     this.http.onload = function () {
 
         // Checking status
-        if (self.http.status === 200) {
+        if (self.http.status === 200 || self.http.status === 205) {
 
             // Callback function(Error, response text)
             callback(null, 'Post Deleted');
@@ -42,26 +42,15 @@ function delete_user_by_id(user_id){
     // Instantiating easyHTTP
     const http = new easyHTTP;
     let url = window.location.href + "/" + user_id.toString();
+    console.log("url= ", url)
     let callback = function (err, response) {
         if (err) {
             console.log(err);
         } else {
             console.log(response);
         }
-    });
+    };
     http.delete(url, callback)
+    document.getElementById(user_id).remove()
+    window.location.reload(true)
 }
-
-
-
-// Delete prototype method(URL,
-// callback(error,response text))
-http.delete(
-    'https://jsonplaceholder.typicode.com/posts/1',
-    function (err, response) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(response);
-        }
-    });

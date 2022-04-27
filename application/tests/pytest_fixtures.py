@@ -9,6 +9,7 @@ from flask_login import FlaskLoginClient
 from application.app import create_app
 from application.controller.routes import configure_routes
 from application.models import db, login_manager
+from application.controller.user_utils import load_user_from_id
 
 
 @pytest.fixture
@@ -25,6 +26,13 @@ def app():
 @pytest.fixture
 def client(app):
 	return app.test_client()
+
+
+@pytest.fixture
+def logged_in_client(app):
+	user = load_user_from_id(user_id=1)
+	with app.test_client(user=user) as client:
+		yield client
 
 
 @pytest.fixture

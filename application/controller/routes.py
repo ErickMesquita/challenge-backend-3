@@ -34,17 +34,17 @@ def configure_routes(app: Flask):
 	def transactions_post():
 		if 'file' not in request.files:
 			flash('Nenhum arquivo enviado')
-			return redirect(url_for("transacoes_get_form"), 303)
+			return redirect(url_for("transactions_get_form"), 303)
 
 		file = request.files["file"]
 
 		if file.filename == "":
 			flash('Nenhum arquivo selecionado')
-			return redirect(url_for("transacoes_get_form"), 303)
+			return redirect(url_for("transactions_get_form"), 303)
 
 		if not allowed_file(file.filename):
 			flash('Extensão inválida')
-			return redirect(url_for("transacoes_get_form"), 303)
+			return redirect(url_for("transactions_get_form"), 303)
 
 		filename = secure_filename(file.filename)
 		file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -58,11 +58,11 @@ def configure_routes(app: Flask):
 
 		if error:
 			flash(error)
-			return redirect(url_for("transacoes_get_form"), 303)
+			return redirect(url_for("transactions_get_form"), 303)
 
 		t_utils.push_transactions_to_db(df)
 
-		return redirect(url_for("transacoes_get_form"), 302)
+		return redirect(url_for("transactions_get_form"), 302)
 
 	@app.get("/transactions")
 	@login_required
@@ -168,7 +168,7 @@ def configure_routes(app: Flask):
 
 		user.deactivate_account()
 		flash(f"Usuário {escape(user.username)} excluído com sucesso", category="success")
-		return redirect(url_for("users_get"))
+		return "", 205
 
 	@app.route("/users/<int:user_id>", methods=["PUT", "PATCH", "POST"])
 	@login_required
@@ -192,7 +192,7 @@ def configure_routes(app: Flask):
 		new_username = form.username.data
 		new_email = form.email.data
 
-		success_message, error = edit_user_account(user_id, new_username, new_email)
+		success_message, error = edit_user_account(user, new_username, new_email)
 
 		if error:
 			flash(error, "danger")

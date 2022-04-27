@@ -50,9 +50,10 @@ def clean_uploaded_transactions_csv(file_or_path) -> (pd.DataFrame, str):
 		return None, "Error: Empty File"
 
 	first_date = df["Data e hora"].iloc[0].date()
-	df = df[df["Data e hora"].apply(lambda x: x.date()) == first_date]
 
-	df.dropna(inplace=True)
+	df = df.replace("", nan).dropna()
+
+	df = df[df["Data e hora"].apply(lambda x: x.date()) == first_date]
 
 	return df, ""
 
