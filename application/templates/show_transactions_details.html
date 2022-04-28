@@ -1,13 +1,69 @@
 {% extends "template_cabecalho.html" %}
 {% block conteudo %}
-    <section class="container-md my-3">
-        <span>Importado em {{ transactions_file.upload_datetime.strftime("%d/%m/%Y - %H:%M:%S") }}</span>
-        <span>Importado por <input type="text" disabled="disabled">{{ transactions_file.user.username }}</input></span>
-        <span>Data transações </span>
-    </section>
+    <section class="container-md border border-1 shadow-sm p-3 my-3">
+        <div class="container gap-3">
+            <div class="row gx-2">
+                <div class="col-3">
+                    <p>Importado em </p>
+                </div>
+                <div class="col border px-3 py-1 border-2">
+                    <span>{{ transactions_file.upload_datetime.strftime("%d/%m/%Y - %H:%M:%S") }}</span>
+                </div>
+            </div>
+            <div class="row gx-2">
+                <div class="col-3">
+                    <p>Importado por </p>
+                </div>
+                <div class="col border px-3 py-1 border-2">
+                    <span>{{ transactions_file.user.username }}</span>
+                </div>
+            </div>
+            <div class="row gx-2">
+                <div class="col-3">
+                    <p>Data transações </p>
+                </div>
+                <div class="col border px-3 py-1 border-2">
+                    <span>{{ transactions_file.transactions_date.strftime("%d/%m/%Y") }}</span>
+                </div>
+            </div>
+        </div>
+   </section>
     <section class="container-md border-top border-2 py-2 my-4">
-        <h2 class="text-center my-3">Importações Realizadas</h2>
-
+        <h2 class="text-center my-3">Transações Importadas</h2>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+                <tr class="text-center">
+                    <th colspan="3">Origem</th>
+                    <th colspan="3">Destino</th>
+                    <th rowspan="2" class="align-middle col-2">Valor</th>
+                </tr>
+                <tr class="text-center">
+                    <th class="col-2">Banco</th>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                    <th class="col-2">Banco</th>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                </tr>
+            </thead>
+            <tbody class="text-capitalize">
+            {% for transaction in transactions_file.transactions %}
+                <tr>
+                    <td>{{ transaction.sender.bank.title() }}</td>
+                    <td>{{ transaction.sender.branch }}</td>
+                    <td>{{ transaction.sender.account }}</td>
+                    <td>{{ transaction.recipient.bank.title() }}</td>
+                    <td>{{ transaction.recipient.branch }}</td>
+                    <td>{{ transaction.recipient.account }}</td>
+                    <td class="text-end real">{{ "%.2f"|format(transaction.amount) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </section>
-
+<style>
+    .real::before {
+        content: "R$ ";
+    }
+</style>
 {% endblock %}
