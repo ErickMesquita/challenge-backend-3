@@ -31,6 +31,10 @@ Os usuários podem fazer o upload de planilhas contendo dados de transações fi
 
 ## :hammer_and_wrench: Abrir e rodar o projeto
 
+Acesse o site http://challenge-backend3.freedynamicdns.net:5000/login e veja o serviço rodando!
+
+ou
+
 1. Clone este repositório
 2. Na pasta raiz do projeto, use o comando `python manage.py compose up --build` para buildar as imagens e rodar o projeto
 
