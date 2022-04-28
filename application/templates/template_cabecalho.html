@@ -17,7 +17,7 @@
 					<ul class="navbar-nav">
 						{% if current_user.is_authenticated %}
 						<li class="nav-item">
-							<a class="nav-link" aria-current="page" href="{{ url_for('transactions_get_form') }}">Importações</a>
+							<a class="nav-link" aria-current="page" href="{{ url_for('transactions_get') }}">Importações</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="{{ url_for('users_get') }}">Usuários</a>
@@ -47,7 +47,7 @@
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
-			<div class="page-header">
+			<div class="page-header my-3">
 				<h1>{{ title }}</h1>
 			</div>
 

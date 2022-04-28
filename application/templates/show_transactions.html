@@ -1,0 +1,31 @@
+{% extends "template_cabecalho.html" %}
+{% block conteudo %}
+    <section class="container-md my-3">
+        {% block form_import_transactions %}
+        {% endblock %}
+    </section>
+    <section class="container-md border-top border-2 py-2 my-4">
+        <h2 class="text-center my-3">Importações Realizadas</h2>
+        <table class="table table-striped table-hover table-responsive table-bordered">
+            <thead class="thead-default">
+                <tr>
+                    <th>Data Transações</th>
+                    <th>Usuário</th>
+                    <th>Data Upload</th>
+                    <th>Opções</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for transactions_file in transactions_files_list %}
+                <tr id="{{ transactions_file.id }}">
+                    <td>{{ transactions_file.transactions_date.strftime("%d/%m/%Y") }}</td>
+                    <td>{{ transactions_file.user.username }}</td>
+                    <td>{{ transactions_file.upload_datetime.strftime("%d/%m/%Y - %H:%M:%S") }}</td>
+                    <td><a class="btn btn-info" href="{{ url_for('transactions_file_get', transactions_file_id=transactions_file.id) }}">Detalhar</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+		</table>
+    </section>
+
+{% endblock %}

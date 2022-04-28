@@ -21,22 +21,25 @@ def is_safe_url(target):
 
 def configure_routes(app: Flask):
 
-	@app.get("/forms/transaction")
+	@app.get("/transactions")
 	@login_required
-	def transactions_get_form():
+	def transactions_get():
 		form = TransactionUploadForm()
-		return render_template("form_transactions.html", title="Importar Transações", form=form)
+		return render_template("form_transactions.html", title="Importar Transações",
+							   form=form, transactions_files_list=t_utils.get_transactions_files_list())
 
-	def allowed_file(filename):
-		return '.' in filename and \
-			filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+	@app.get("/transactions/<int:transactions_file_id>")
+	@login_required
+	def transactions_file_get(transactions_file_id):
+		transactions_file = t_utils.transactions_file_from_id(transactions_file_id)
+		return render_template("show_transactions_details.html", transactions_file=transactions_file)
 
 	@app.post("/transaction")
 	def transactions_post():
 		form = TransactionUploadForm()
 
 		if not form.validate_on_submit():
-			return redirect(url_for("transactions_get_form"), 303)
+			return redirect(url_for("transactions_get"), 303)
 
 		file = form.file.data
 
@@ -54,17 +57,16 @@ def configure_routes(app: Flask):
 
 		if error:
 			flash(error, category="warning")
-			return redirect(url_for("transactions_get_form"), 303)
+			return redirect(url_for("transactions_get"), 303)
 
-		t_utils.push_transactions_to_db(df, date, current_user, file_path)
+		success, error = t_utils.push_transactions_to_db(df, date, current_user, file_path)
+
+		if error:
+			flash(error, category="warning")
+			return redirect(url_for("transactions_get"), 303)
 
 		flash(f"Upload das transações do dia {date} bem sucedido", category="success")
-		return redirect(url_for("transactions_get_form"), 302)
-
-	@app.get("/transactions")
-	@login_required
-	def transactions_get():
-		return "Transactions get"
+		return redirect(url_for("transactions_get"), 302)
 
 	@app.route("/login", methods=["GET", "POST"])
 	def login():

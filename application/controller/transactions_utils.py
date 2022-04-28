@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 import pandas as pd
 import datetime
@@ -116,9 +116,13 @@ def push_bank_accounts_to_database(df: pd.DataFrame):
 			db.session.rollback()
 
 
-def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: User, filepath: str):
+def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: User, filepath: str)\
+							-> (Union[str, None], Union[str, None]):
 	if df.empty:
-		return
+		return None, "Nenhuma transação no arquivo"
+
+	if date_already_in_db(date):
+		return None, f"As transações do dia {date} já foram adicionadas"
 
 	if not db.inspect(db.engine).has_table("transaction"):
 		db.create_all()
@@ -145,5 +149,39 @@ def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: Use
 
 		db.session.add(transaction)
 
-	db.session.commit()
-	return df
+	try:
+		db.session.commit()
+	except IntegrityError as e:
+		return None, e.__str__()
+
+	return "Importação bem sucedida", None
+
+
+def transactions_file_from_date(date: datetime.date) -> Union[TransactionsFile, None]:
+	if not date:
+		return None
+
+	query = db.select(TransactionsFile).where(TransactionsFile.transactions_date == date)
+
+	return db.session.scalars(query).all()
+
+
+def date_already_in_db(date: datetime.date) -> Union[bool, None]:
+	if not date:
+		return None
+
+	return len(transactions_file_from_date(date)) > 0
+
+
+def get_transactions_files_list() -> List[TransactionsFile]:
+	query = db.select(TransactionsFile)
+	return db.session.scalars(query).all()
+
+
+def transactions_file_from_id(tf_id: int) -> Union[TransactionsFile, None]:
+	if tf_id is None:
+		return None
+
+	query = db.select(TransactionsFile).where(TransactionsFile.id == tf_id)
+
+	return db.session.scalars(query).first()

@@ -1,5 +1,5 @@
-{% extends "template_cabecalho.html" %}
-{% block conteudo %}
+{% extends "show_transactions.html" %}
+{% block form_import_transactions %}
 	<form method="post" action="{{ url_for('transactions_post') }}" enctype="multipart/form-data">
 		{{ form.csrf_token }}
 		<fieldset>

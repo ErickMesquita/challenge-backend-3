@@ -1,0 +1,13 @@
+{% extends "template_cabecalho.html" %}
+{% block conteudo %}
+    <section class="container-md my-3">
+        <span>Importado em {{ transactions_file.upload_datetime.strftime("%d/%m/%Y - %H:%M:%S") }}</span>
+        <span>Importado por <input type="text" disabled="disabled">{{ transactions_file.user.username }}</input></span>
+        <span>Data transações </span>
+    </section>
+    <section class="container-md border-top border-2 py-2 my-4">
+        <h2 class="text-center my-3">Importações Realizadas</h2>
+
+    </section>
+
+{% endblock %}
