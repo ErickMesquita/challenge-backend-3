@@ -9,5 +9,5 @@ WORKDIR /usr/src/app/code
 
 COPY requirements /usr/src/app/requirements
 
-RUN ["python", "-v", "pip", "install", "pandas==1.4"]
+RUN ["python", "-v", "-m", "pip", "install", "pandas==1.4"]
 RUN pip install -r /usr/src/app/requirements/development.txt

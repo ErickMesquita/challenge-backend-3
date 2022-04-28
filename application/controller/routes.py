@@ -21,6 +21,10 @@ def is_safe_url(target):
 
 def configure_routes(app: Flask):
 
+	@app.get("/")
+	def index():
+		return redirect("login")
+
 	@app.get("/transactions")
 	@login_required
 	def transactions_get():
@@ -86,12 +90,12 @@ def configure_routes(app: Flask):
 		flash(f"Usuário {user.username} logado com sucesso!", "success")
 
 		if "next" not in request.args:
-			return redirect(url_for("transactions_get_form"))
+			return redirect(url_for("transactions_get"))
 
 		next_url = request.args.get('next')
 
 		if next_url == "/logout":
-			return redirect(url_for("transactions_get_form"))
+			return redirect(url_for("transactions_get"))
 		if not is_safe_url(next_url):
 			return abort(400)
 		return redirect(next_url)
