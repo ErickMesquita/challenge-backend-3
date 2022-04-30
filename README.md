@@ -12,7 +12,7 @@
 	<p align="center">Aplicação web para analisar e investigar transações financeiras</p>
 </h3>
 
-Aprender a desenvolver uma aplicação web tradicional completa com upload de arquivos, controle de acesso e análise de dados. O projeto é dividido em containers Docker, para facilitar o deploy.
+O objetivo é aprender desenvolvimento web na prática, com uma aplicação web completa com upload de arquivos, controle de acesso e análise de dados. O projeto é dividido em containers Docker, para facilitar o deploy.
 
 Os usuários podem fazer o upload de planilhas contendo dados de transações financeiras e elas serão analizadas pelo sistema.
 
