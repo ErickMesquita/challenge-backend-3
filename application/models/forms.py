@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
+from flask_wtf.file import FileField, FileRequired, FileAllowed, FileSize
 from wtforms import StringField, PasswordField, EmailField
 from wtforms.validators import InputRequired, Length, NoneOf, Email
 
@@ -33,6 +33,7 @@ class TransactionUploadForm(FlaskForm):
 	file = FileField(
 		label="Upload da Transação",
 		validators=[FileRequired(),
+					FileSize(max_size=15 * 2**20),
 					FileAllowed(upload_set=["csv", "xml"],
 					message="Apenas arquivos CSV e XML")]
 	)

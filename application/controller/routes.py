@@ -3,8 +3,8 @@ from urllib.parse import urlparse, urljoin
 
 from flask import redirect, render_template, url_for, request, flash, Flask, abort
 from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.utils import secure_filename
 from application.controller import transactions_utils as t_utils
+from application.controller.transactions_utils import get_extension_strategy
 from application.models.forms import LoginForm, SignUpForm, TransactionUploadForm
 from application.models.user import User
 from application.controller.password_utils import check_password_hash
@@ -47,17 +47,20 @@ def configure_routes(app: Flask):
 
 		file = form.file.data
 
-		filename = secure_filename(file.filename)
-		directory_path = os.path.join(app.config['UPLOAD_FOLDER'], str(current_user.id))
+		upload_folder_path = app.config['UPLOAD_FOLDER']
+		file_path, error = t_utils.save_uploaded_file(file, upload_folder_path, current_user.id)
+		if error:
+			flash(error, category="warning")
+			return redirect(url_for("transactions_get"), 303)
 
-		if not os.path.exists(directory_path):
-			os.mkdir(directory_path)
+		strategy, error = get_extension_strategy(file_path)
+		if error:
+			flash(error, category="warning")
+			return redirect(url_for("transactions_get"), 303)
 
-		file_path = os.path.join(directory_path, filename)
+		df = strategy.read_file(file_path)
 
-		file.save(file_path)
-
-		df, date, error = t_utils.clean_uploaded_transactions_csv(file_path)
+		df, date, error = t_utils.clean_uploaded_transactions(df)
 
 		if error:
 			flash(error, category="warning")

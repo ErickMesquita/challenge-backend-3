@@ -128,5 +128,31 @@ def env():
 		print(f"{key} -> {value}")
 
 
+@cli.command(context_settings={"ignore_unknown_options": True})
+@click.argument("subcommand", nargs=-1, type=click.Path())
+def buildx(subcommand):
+	config = os.getenv("APPLICATION_CONFIG")
+	configure_app(config)
+
+	subcommand_list = list(subcommand)
+
+	docker_compose_filename = f"{config}.yml"
+	project_basedir = os.path.dirname(__file__)
+	docker_compose_path = os.path.join(project_basedir, "docker", docker_compose_filename)
+
+	if subcommand_list and subcommand_list[0] == "bake":
+		subcommand_list.append("-f")
+		subcommand_list.append(docker_compose_path)
+
+	cmdline = ["docker", "buildx"] + subcommand_list
+
+	try:
+		p = subprocess.Popen(cmdline)
+		p.wait()
+	except KeyboardInterrupt:
+		p.send_signal(signal.SIGINT)
+		p.wait()
+
+
 if __name__ == "__main__":
 	cli()

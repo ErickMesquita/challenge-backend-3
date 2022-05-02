@@ -41,6 +41,11 @@ def resources_path():
 
 
 @pytest.fixture
+def uploads_path():
+	return os.path.join(os.path.dirname(__file__), "uploads_mock")
+
+
+@pytest.fixture
 def bank():
 	return "BANCO BANCÃO SA"
 

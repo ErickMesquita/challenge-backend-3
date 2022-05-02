@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   db:
+    image: erickbrunoro/challenge_db_development:latest
     build:
       context: ./db
       dockerfile: db.dockerfile
@@ -18,6 +19,7 @@ services:
 
 
   web:
+    image: erickbrunoro/challenge_web_development:latest
     build:
       context: ${PWD}
       dockerfile: docker/dockerfile

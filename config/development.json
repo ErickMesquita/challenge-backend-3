@@ -2,7 +2,7 @@
 	"FLASK_ENV": "development",
 	"FLASK_CONFIG": "development",
 	"FLASK_APP": "application.wsgi",
-	"SERVER_NAME": "::1 localhost",
+	"SERVER_NAME": "challenge-backend3.freedynamicdns.net:80",
 	"POSTGRES_DB": "postgres",
 	"POSTGRES_USER": "postgres",
 	"POSTGRES_PASSWORD": "senha123",
