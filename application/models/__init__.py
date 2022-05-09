@@ -27,8 +27,8 @@ class Transaction(db.Model):
 	sender_id	 = db.Column(db.Integer, db.ForeignKey('bank_account.id'))
 	recipient_id = db.Column(db.Integer, db.ForeignKey('bank_account.id'))
 
-	sender	  = db.relationship("BankAccount", foreign_keys=[sender_id])
-	recipient = db.relationship("BankAccount", foreign_keys=[recipient_id])
+	sender	  = db.relationship("BankAccount", foreign_keys=[sender_id], backref="transactions_sent")
+	recipient = db.relationship("BankAccount", foreign_keys=[recipient_id], backref="transactions_received")
 
 	amount		  = db.Column(db.Numeric, nullable=False)
 	date_and_time = db.Column(db.DateTime, nullable=False)

@@ -27,6 +27,7 @@ class CsvStrategy(ExtensionsSupportStrategy):
 		from application.controller.transactions_utils import decimal_from_value
 		df = pd.read_csv(file_or_path, names=cls.columns_names_list,
 						 infer_datetime_format=True,
+						 sep=None,
 						 parse_dates=[7],
 						 converters={"Valor": decimal_from_value,
 									 "Banco origem": str,
@@ -55,7 +56,7 @@ class XmlStrategy(ExtensionsSupportStrategy):
 
 		for transaction in root.iter('transacao'):
 			amount = transaction.find('valor')
-			amount = amount.text if amount else ""
+			amount = amount.text if amount is not None else ""
 			amount = decimal_from_value(amount)
 
 			date_and_time = transaction.find('data')
@@ -74,7 +75,7 @@ class XmlStrategy(ExtensionsSupportStrategy):
 									recipient_bank, recipient_branch, recipient_account,
 									amount, date_and_time)], columns=cls.columns_names_list)
 
-			pd.concat([df, df_row], ignore_index=True)
+			df = pd.concat([df, df_row], ignore_index=True)
 
 		return df, None
 
@@ -83,17 +84,17 @@ class XmlStrategy(ExtensionsSupportStrategy):
 		"""
 		Returns tuple (bank, branch, account) from given bank_account Element
 		"""
-		if not bank_account:
+		if bank_account is None:
 			return "", "", ""
 
 		bank = bank_account.find('banco')
-		bank = bank.text if bank else ""
+		bank = bank.text if bank is not None else ""
 
 		branch = bank_account.find('agencia')
-		branch = branch.text if branch else ""
+		branch = branch.text if branch is not None else ""
 
 		account = bank_account.find('conta')
-		account = account.text if account else ""
+		account = account.text if account is not None else ""
 
 		return bank, branch, account
 

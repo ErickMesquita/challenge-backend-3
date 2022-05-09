@@ -95,6 +95,22 @@ def clean_uploaded_transactions(df: pd.DataFrame) -> (pd.DataFrame, datetime.dat
 	return df, first_date, ""
 
 
+def get_bank_account_from_id(bk_id: Union[int, List[int]], as_dataframe: bool = False)\
+							-> Union[pd.DataFrame, List[BankAccount]]:
+	if not bk_id:
+		return list()
+
+	if isinstance(bk_id, int):
+		bk_id = [bk_id]
+
+	query = db.select(BankAccount).where(BankAccount.id.in_(bk_id))
+
+	if as_dataframe:
+		return pd.read_sql_query(query, db.get_engine(), index_col="id", coerce_float=False)
+
+	return db.session.scalars(query).all()
+
+
 def bank_account_id_from_database(bk: BankAccount = None, bank=None, branch=None, account=None):
 	if bk is None:
 		bk = BankAccount(bank=bank, branch=branch, account=account)

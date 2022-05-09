@@ -1,0 +1,100 @@
+{% extends "template_cabecalho.html" %}
+{% block conteudo %}
+    <section class="container-md border border-1 shadow-sm p-3 my-3">
+        <div class="container gap-3">
+            <div class="row gx-2">
+                <div class="col-3">
+                    <p>Importado em </p>
+                </div>
+                <div class="col border px-3 py-1 border-2">
+                    <span>dia/mês/ano</span>
+                </div>
+            </div>
+        </div>
+   </section>
+    {% if date_selected %}
+    <section class="container-md border-top border-2 py-2 my-4">
+        <h2 class="text-center my-3">Transações Suspeitas</h2>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+                <tr class="text-center">
+                    <th colspan="3">Origem</th>
+                    <th colspan="3">Destino</th>
+                    <th rowspan="2" class="align-middle col-2">Valor</th>
+                    <th rowspan="2" class="align-middle col-2">Data e Hora</th>
+                </tr>
+                <tr class="text-center">
+                    <th class="col-2">Banco</th>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                    <th class="col-2">Banco</th>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                </tr>
+            </thead>
+            <tbody class="text-capitalize">
+            {% for sus_transaction in sus_transactions.itertuples() %}
+                <tr>
+                    <td>{{ sus_transaction.sender_bank }}</td>
+                    <td>{{ sus_transaction.sender_branch }}</td>
+                    <td>{{ sus_transaction.sender_account }}</td>
+                    <td>{{ sus_transaction.recipient_bank }}</td>
+                    <td>{{ sus_transaction.recipient_branch }}</td>
+                    <td>{{ sus_transaction.recipient_account }}</td>
+                    <td class="text-end real">{{ "%.2f"|format(sus_transaction.amount) }}</td>
+                    <td>{{ sus_transaction.date_and_time.strftime("%d/%m/%Y %H:%M:%S") }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="container-md border-top border-2 py-2 my-4">
+        <h2 class="text-center my-3">Contas Suspeitas</h2>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+                <tr class="text-center">
+                    <th class="col-2">Banco</th>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                    <th>Total Enviado</th>
+                    <th>Total Recebido</th>
+                </tr>
+            </thead>
+            <tbody class="text-capitalize">
+            {% for sus_account in sus_accounts.itertuples() %}
+            <tr>
+                <td>{{ sus_account.bank }}</td>
+                <td>{{ sus_account.branch }}</td>
+                <td>{{ sus_account.account }}</td>
+                <td class="text-end real">{{ "%.2f"|format(sus_account.sent_amount) }}</td>
+                <td class="text-end real">{{ "%.2f"|format(sus_account.received_amount) }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="container-md border-top border-2 py-2 my-4">
+        <h2 class="text-center my-3">Agências Suspeitas</h2>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+                <tr class="text-center">
+                    <th class="col-2">Banco</th>
+                    <th>Agência</th>
+                    <th>Total Enviado</th>
+                    <th>Total Recebido</th>
+                </tr>
+            </thead>
+            <tbody class="text-capitalize">
+            {% for sus_branch in sus_branches.itertuples() %}
+                <tr>
+                    <td>{{ sus_branch.bank }}</td>
+                    <td>{{ sus_branch.branch }}</td>
+                    <td class="text-end real">{{ "%.2f"|format(sus_branch.sent_amount) }}</td>
+                    <td class="text-end real">{{ "%.2f"|format(sus_branch.received_amount) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+{% endblock %}

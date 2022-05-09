@@ -1,5 +1,6 @@
 *__pycache__*
 .idea
 application/uploads/*
+application/tests/uploads_mock/*
 user_passwords.txt
 *armv6*

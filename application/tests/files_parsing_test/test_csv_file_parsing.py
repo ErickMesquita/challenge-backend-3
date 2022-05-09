@@ -103,3 +103,22 @@ def test_csv_consider_second_line_date_when_first_line_date_is_empty(resources_p
 	assert not error2
 	assert df is not None
 	assert len(df) == 9
+
+
+def test_csv_semicolon_separated_file(resources_path):
+	"""
+	GIVEN csv file separated with semicolon
+	WHEN
+	THEN
+	"""
+
+	csv_file_path = os.path.join(resources_path, "transacoes-2022-01-09-sus-transactions.csv")
+
+	df, error = CsvStrategy.read_file(csv_file_path)
+
+	df, resulting_date, error2 = clean_uploaded_transactions(df)
+
+	assert not error
+	assert not error2
+	assert df is not None
+	assert len(df) == 10

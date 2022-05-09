@@ -1,7 +1,9 @@
 import pandas as pd
 
+from application.controller.transactions_utils import get_bank_account_from_id
 from application.models import BankAccount, Transaction, db
-from application.tests.pytest_fixtures import app, bank, branch, account, bank2, branch2, account2, columns_names_list, transactions_df
+from application.tests.pytest_fixtures import app, bank, branch, account,\
+	bank2, branch2, account2, columns_names_list, transactions_df, logged_in_client
 import pytest
 from sqlalchemy.exc import IntegrityError
 from application.controller import transactions_utils as t_utils
@@ -46,6 +48,26 @@ def test_bank_account_id_from_database(app, bank, branch, account):
 	assert type(id_bk) == int
 
 
+def test_get_bank_account_from_id(app):
+	bk_id = db.session.scalars(db.select(BankAccount.id)).first()
+
+	result = get_bank_account_from_id(bk_id)
+
+	assert isinstance(result, list)
+	assert len(result) == 1
+
+
+def test_get_bank_account_from_id_as_dataframe(app):
+	bk_id = db.session.scalars(db.select(BankAccount.id)).first()
+
+	result = get_bank_account_from_id(bk_id, as_dataframe=True)
+
+	print(result)
+
+	assert isinstance(result, pd.DataFrame)
+	assert len(result) == 1
+
+
 def test_bank_account_table_existence_on_database(app):
 	insp = db.inspect(db.engine)
 	assert insp.has_table("bank_account") is True
@@ -68,9 +90,3 @@ def test_bank_account_uniqueness_constraint(app, bank, branch, account):
 
 def test_push_bank_accounts_df_to_database(app, transactions_df):
 	t_utils.push_bank_accounts_to_database(transactions_df)
-
-
-def test_push_transactions_df_to_database(app, columns_names_list, transactions_df,
-										  bank, branch, account,
-										  bank2, branch2, account2,):
-	t_utils.push_transactions_to_db(transactions_df)

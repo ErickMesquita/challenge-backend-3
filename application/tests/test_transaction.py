@@ -1,6 +1,7 @@
 import os
 import pytest
-from application.tests.pytest_fixtures import app, client, logged_in_client, resources_path
+from application.tests.pytest_fixtures import app,\
+	client, logged_in_client, resources_path, uploads_path
 
 
 def test_response_200_when_access_homepage(client):
@@ -8,7 +9,6 @@ def test_response_200_when_access_homepage(client):
 	assert response.status_code == 200
 
 @pytest.mark.parametrize(('url'), (
-		("/forms/transaction"),
 		("/transactions"),
 		("/forms/signup"),
 		("/users"),
@@ -64,7 +64,7 @@ def test_save_csv_file_after_upload(app, logged_in_client, resources_path):
 	"""
 	filename = "146.csv"
 	csv_file_146_bytes_path = os.path.join(resources_path, filename)
-	uploaded_file_path = os.path.join(app.config.get("UPLOAD_FOLDER"), filename)
+	uploaded_file_path = os.path.join(app.config.get("UPLOAD_FOLDER"), str(1), filename)
 
 	if os.path.exists(uploaded_file_path):
 		os.remove(uploaded_file_path)
