@@ -1,12 +1,12 @@
 <h1 align="center">
 	<p align="center">Desafio Back-End</p>
-	<a href="https://www.alura.com.br/challenges/back-end-3"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/challenges-logo-2.svg" alt="Alura Challenges"></a>
+	<a href="https://www.alura.com.br/challenges/back-end-3"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo-2-darkbg.svg" alt="Alura Challenges"></a>
 </h1>
 <div align="center" id="badges">
 	<a href="https://docs.python.org/3.8/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/Python-3.8-brightgreen.svg" alt="Python 3.8"></a>
 	<a href="https://docs.pytest.org/en/7.1.x/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/tested%20with-pytest-blue.svg" alt="Teste with pytest"></a>
 	<a href="https://docs.docker.com/compose/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/Deploy%20with-Docker%20Compose-blue.svg" alt="Deploy with Docker Compose"></a>
-	<img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
+	<img src="https://img.shields.io/badge/Status-Aprovado-brightgreen" alt="Status: Em desenvolvimento">
 </div>
 <h3>
 	<p align="center">Aplicação web para analisar e investigar transações financeiras</p>
@@ -18,10 +18,20 @@ Os usuários podem fazer o upload de planilhas contendo dados de transações fi
 
 ## :zap: Funcionalidades
 
- - :page_with_curl: `Upload de arquivos`: Planilhas com dados sobre transações financeiras a serem analizadas
- - :floppy_disk: `Armazenamento em banco de dados`: Persistência em Banco de Dados SQL
  - :closed_lock_with_key: `Controle de Acesso`: CRUD de usuários com Login, Logout, Cadastro e Exclusão de contas de usuário
+ - :page_with_curl: `Upload de arquivos`: Arquivos CSV e XML com dados sobre transações financeiras a serem analizadas
+ - :floppy_disk: `Armazenamento em banco de dados`: Persistência em Banco de Dados SQL
  - :microscope: `Análise de Transações`: Investigação em busca de fraudes ou transações suspeitas
+
+### :closed_lock_with_key: Login
+
+<img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Login-admin.gif" alt="GIF showing user login">
+
+
+### :closed_lock_with_key: Signup
+
+<img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Signup.gif" alt="GIF showing new user account creation">
+
 
 ## Requisitos
 
@@ -45,8 +55,9 @@ APPLICATION_CONFIG=testing python manage.py compose up
 
 ## Modos de Operação
 
- - `Testing`: Inicia um contêiner com o banco de dados sem persistência. A aplicação deve ser executada diretamente no host, sem conteineização. Este modo é especialmente útil para executar os testes PyTest 
- - `Development`: Tanto o banco de dados quanto a aplicação rodam em contêineres. Os dados do banco de dados são armazenados em um volume no host. Os códigos da aplicação são trazidos de volume no host, para que a cada mudança no código, o servidor seja automaticamente reiniciado com a versão mais recente
+ - `testing`: Inicia um contêiner com o banco de dados sem persistência. A aplicação deve ser executada diretamente no host, sem conteineização. Este modo é especialmente útil para executar os testes PyTest 
+ - `development`: Tanto o banco de dados quanto a aplicação rodam em contêineres. Os dados do banco de dados são armazenados em um volume no host. Os códigos da aplicação são trazidos de volume no host, para que a cada mudança no código, o servidor seja automaticamente reiniciado com a versão mais recente
+ - `production`: Servidor Gunicorn com segurança adicional. Desativa o debugger do Flask 
 
 ## :hammer_and_wrench: Configuração
 
