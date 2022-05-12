@@ -1,5 +1,4 @@
 import os
-import secrets
 
 
 class Config(object):
@@ -26,7 +25,7 @@ class Config(object):
 
 class ProductionConfig(Config):
 	"""Production configuration"""
-	SECRET_KEY = secrets.token_hex(256)
+	SECRET_KEY = os.environ.get("FLASK_SECRET_KEY")
 
 
 class DevelopmentConfig(Config):

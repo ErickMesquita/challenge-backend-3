@@ -1,0 +1,12 @@
+FROM python:3.8
+LABEL author="Erick Brunoro"
+
+RUN mkdir -p /usr/src/app
+RUN mkdir /usr/src/app/code
+RUN mkdir /usr/src/app/requirements
+
+WORKDIR /usr/src/app/code
+
+COPY requirements /usr/src/app/requirements
+
+RUN pip install -r /usr/src/app/requirements/production.txt

@@ -8,6 +8,7 @@ import json
 import signal
 import subprocess
 import time
+import secrets
 
 import click
 
@@ -85,6 +86,8 @@ def docker_compose_cmdline(config: str):
 @click.argument("subcommand", nargs=-1, type=click.Path())
 def compose(subcommand):
 	cmdline = docker_compose_cmdline(os.getenv("APPLICATION_CONFIG")) + list(subcommand)
+
+	setenv("FLASK_SECRET_KEY", secrets.token_hex(256))
 
 	try:
 		p = subprocess.Popen(cmdline)
