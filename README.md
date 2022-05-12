@@ -45,7 +45,7 @@ Novos usuários somente podem ser cadastrados por usuários já existentes. Um d
 <p align="center"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Signup.gif" alt="GIF showing new user account creation" width=550></p>
 
 
-### :microscope: Analysis
+### :microscope: Análise
 
 São consideradas suspeitas:
  - Transações acima de R$100.000,00
@@ -71,9 +71,9 @@ APPLICATION_CONFIG=testing python manage.py compose up
 
 ## Modos de Operação
 
- - `testing`: Inicia um contêiner com o banco de dados sem persistência. A aplicação deve ser executada diretamente no host, sem conteineização. Este modo é especialmente útil para executar os testes PyTest 
- - `development`: Tanto o banco de dados quanto a aplicação rodam em contêineres. Os dados do banco de dados são armazenados em um volume no host. Os códigos da aplicação são trazidos de volume no host, para que a cada mudança no código, o servidor seja automaticamente reiniciado com a versão mais recente
- - `production`: Servidor Gunicorn com segurança adicional. Desativa o debugger do Flask 
+ - `testing`: Inicia um contêiner com o banco de dados sem persistência. A aplicação deve ser executada diretamente no host, sem conteinerização. Este modo é especialmente útil para executar os testes pytest 
+ - `development`: Tanto o banco de dados quanto a aplicação rodam em contêineres. Os dados do banco de dados são armazenados em um volume no host. Os códigos da aplicação são trazidos de volume no host, para que a cada mudança no código o servidor seja automaticamente atualizado com a versão mais recente
+ - `production`: Modo de uso com segurança adicional, que desativa o debugger do Flask. É utilizado o servidor Gunicorn para melhor desempenho em produção.
 
 ## :hammer_and_wrench: Configuração
 
@@ -85,14 +85,15 @@ As configurações específicas do Flask estão no arquivo `application/config.p
 
 ## :man_technologist: Tecnologias utilizadas
 
+ - [Docker](https://www.docker.com/)
  - [Flask 2.1](https://flask.palletsprojects.com/en/2.1.x/)
- - [PostgreSQL 14.2](https://www.postgresql.org/)
- - [Flask-SQLAlchemy 2.5](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
  - [Flask-Bcrypt 1.0](https://flask-bcrypt.readthedocs.io/en/latest/)
- - [Flask-Migrate 3.1](https://flask-migrate.readthedocs.io/en/latest/index.html)
  - [Flask-Login 0.6](https://flask-login.readthedocs.io/en/latest/)
+ - [Flask-Migrate 3.1](https://flask-migrate.readthedocs.io/en/latest/index.html)
+ - [Flask-SQLAlchemy 2.5](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
  - [Flask-WTForms 1.0](https://flask-wtf.readthedocs.io/en/1.0.x/)
  - [Pandas 1.4](https://pandas.pydata.org/)
+ - [PostgreSQL 14.2](https://www.postgresql.org/)
  - [PyCharm](https://www.jetbrains.com/pycharm/0)
 
 ## :man_teacher:: Aprendizados
