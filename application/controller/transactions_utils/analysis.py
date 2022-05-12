@@ -12,6 +12,12 @@ def get_transactions_from_month(month: int = None, year: int = None, date: datet
 	if (not month or not year) and not date:
 		return pd.DataFrame()
 
+	if month > 12:
+		month = 12
+
+	if month < 1:
+		month = 1
+
 	if not date:
 		date = datetime.date(year, month, 1)
 
@@ -26,6 +32,13 @@ def get_transactions_from_month(month: int = None, year: int = None, date: datet
 
 
 def join_bank_account_data(transactions: pd.DataFrame) -> pd.DataFrame:
+	if transactions.empty:
+		df = pd.concat([transactions,
+						pd.DataFrame(columns=["sender_bank", "sender_branch", "sender_account",
+											  "recipient_bank", "recipient_branch", "recipient_account"])
+						])
+		return df
+
 	account_ids_list = pd.concat([transactions["sender_id"], transactions["recipient_id"]]).drop_duplicates().to_list()
 
 	bank_accounts = get_bank_account_from_id(account_ids_list, as_dataframe=True)

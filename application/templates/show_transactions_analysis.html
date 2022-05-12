@@ -2,19 +2,27 @@
 {% block conteudo %}
     <section class="container-md border border-1 shadow-sm p-3 my-3">
         <div class="container gap-3">
-            <div class="row gx-2">
-                <div class="col-3">
-                    <p>Importado em </p>
+            <form method="GET" action="#">
+                <div class="row gx-2">
+                    <div class="col-3">
+                        <label for="month">Mês das transações: </label>
+                    </div>
+                    <div class="col border px-3 py-1 border-2">
+                        <input type="month" name="month">
+                    </div>
                 </div>
-                <div class="col border px-3 py-1 border-2">
-                    <span>dia/mês/ano</span>
+                <div class="row gx-2">
+                    <input type="submit">
                 </div>
-            </div>
+            </form>
         </div>
    </section>
     {% if date_selected %}
     <section class="container-md border-top border-2 py-2 my-4">
         <h2 class="text-center my-3">Transações Suspeitas</h2>
+        {% if sus_transactions|length == 0 %}
+            <p class="text-center my-2">Nenhuma transação suspeita no mês selecionado</p>
+        {% else %}
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-light">
                 <tr class="text-center">
@@ -36,65 +44,74 @@
             {% for sus_transaction in sus_transactions.itertuples() %}
                 <tr>
                     <td>{{ sus_transaction.sender_bank }}</td>
-                    <td>{{ sus_transaction.sender_branch }}</td>
-                    <td>{{ sus_transaction.sender_account }}</td>
+                    <td class="text-center">{{ sus_transaction.sender_branch }}</td>
+                    <td class="text-center">{{ sus_transaction.sender_account }}</td>
                     <td>{{ sus_transaction.recipient_bank }}</td>
-                    <td>{{ sus_transaction.recipient_branch }}</td>
-                    <td>{{ sus_transaction.recipient_account }}</td>
+                    <td class="text-center">{{ sus_transaction.recipient_branch }}</td>
+                    <td class="text-center">{{ sus_transaction.recipient_account }}</td>
                     <td class="text-end real">{{ "%.2f"|format(sus_transaction.amount) }}</td>
                     <td>{{ sus_transaction.date_and_time.strftime("%d/%m/%Y %H:%M:%S") }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </section>
     <section class="container-md border-top border-2 py-2 my-4">
         <h2 class="text-center my-3">Contas Suspeitas</h2>
+        {% if sus_accounts|length == 0 %}
+            <p class="text-center my-2">Nenhuma conta suspeita no mês selecionado</p>
+        {% else %}
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-light">
                 <tr class="text-center">
                     <th class="col-2">Banco</th>
                     <th>Agência</th>
                     <th>Conta</th>
-                    <th>Total Enviado</th>
-                    <th>Total Recebido</th>
+                    <th class="text-end">Total Enviado</th>
+                    <th class="text-end">Total Recebido</th>
                 </tr>
             </thead>
             <tbody class="text-capitalize">
             {% for sus_account in sus_accounts.itertuples() %}
             <tr>
                 <td>{{ sus_account.bank }}</td>
-                <td>{{ sus_account.branch }}</td>
-                <td>{{ sus_account.account }}</td>
+                <td class="text-center">{{ sus_account.branch }}</td>
+                <td class="text-center">{{ sus_account.account }}</td>
                 <td class="text-end real">{{ "%.2f"|format(sus_account.sent_amount) }}</td>
                 <td class="text-end real">{{ "%.2f"|format(sus_account.received_amount) }}</td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </section>
     <section class="container-md border-top border-2 py-2 my-4">
         <h2 class="text-center my-3">Agências Suspeitas</h2>
+        {% if sus_branches|length == 0 %}
+            <p class="text-center my-2">Nenhuma agência suspeita no mês selecionado</p>
+        {% else %}
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-light">
                 <tr class="text-center">
                     <th class="col-2">Banco</th>
                     <th>Agência</th>
-                    <th>Total Enviado</th>
-                    <th>Total Recebido</th>
+                    <th class="text-end">Total Enviado</th>
+                    <th class="text-end">Total Recebido</th>
                 </tr>
             </thead>
             <tbody class="text-capitalize">
             {% for sus_branch in sus_branches.itertuples() %}
                 <tr>
                     <td>{{ sus_branch.bank }}</td>
-                    <td>{{ sus_branch.branch }}</td>
+                    <td class="text-center">{{ sus_branch.branch }}</td>
                     <td class="text-end real">{{ "%.2f"|format(sus_branch.sent_amount) }}</td>
                     <td class="text-end real">{{ "%.2f"|format(sus_branch.received_amount) }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </section>
     {% endif %}
 {% endblock %}
