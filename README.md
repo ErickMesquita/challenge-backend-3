@@ -16,7 +16,13 @@ O objetivo é aprender desenvolvimento web na prática, com uma aplicação web 
 
 Os usuários podem fazer o upload de planilhas contendo dados de transações financeiras e elas serão analizadas pelo sistema.
 
-Este projeto foi apresentado para a banca de professores da Alura e foi aprovado em 10/05/2022
+Este projeto foi apresentado para a banca de professores da Alura e foi aprovado em 10/05/2022.
+
+## Requisitos
+
+ - [Python 3.8+](https://docs.python.org/3.8/)
+ - [Docker](https://www.docker.com/)
+ - [Docker Compose](https://docs.docker.com/compose/)
 
 ## :zap: Funcionalidades
 
@@ -27,19 +33,27 @@ Este projeto foi apresentado para a banca de professores da Alura e foi aprovado
 
 ### :closed_lock_with_key: Login
 
+Apenas usuários logados podem acessar o sistema, fazer upload de arquivos e gerar análises.
+
 <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Login-admin.gif" alt="GIF showing user login" width=550>
 
 
 ### :closed_lock_with_key: Signup
 
+Novos usuários somente podem ser cadastrados por usuários já existentes. Um dos requisitos do projeto é que seja gerada senha numérica com 6 dígitos. A senha é armazenada criptografada no banco de dados com SHA512 e [bcrypt](https://flask-bcrypt.readthedocs.io/en/latest/)
+
 <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Signup.gif" alt="GIF showing new user account creation" width=550>
 
 
-## Requisitos
+### :microscope: Analysis
 
- - [Python 3.8+](https://docs.python.org/3.8/)
- - [Docker](https://www.docker.com/)
- - [Docker Compose](https://docs.docker.com/compose/)
+São consideradas suspeitas:
+ - Transações acima de R$100.000,00
+ - Contas bancárias que enviarem ou receberem R$1.000.000,00 ou mais no mesmo mês
+ - Agências bancárias que enviarem ou receberem R$1.000.000.000,00 ou mais no mesmo mês
+
+<img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Analysis.gif" alt="GIF showing new user account creation" width=550>
+
 
 ## :hammer_and_wrench: Abrir e rodar o projeto
 
