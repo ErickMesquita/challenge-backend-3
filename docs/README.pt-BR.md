@@ -8,6 +8,9 @@
 	<a href="https://docs.docker.com/compose/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Deploy%20with-Docker%20Compose-blue.svg" alt="Deploy with Docker Compose"></a>
 	<img src="https://img.shields.io/badge/Status-Aprovado-brightgreen" alt="Status: Aprovado">
 </div>
+
+*Read this in other languages: [English](https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/README.en-US.md)*
+
 <h3>
 	<p align="center">Aplicação web para analisar e investigar transações financeiras</p>
 </h3>
