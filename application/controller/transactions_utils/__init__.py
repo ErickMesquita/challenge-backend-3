@@ -36,8 +36,8 @@ def save_uploaded_file(file, upload_folder_path: str, user_id: int) -> (Union[st
 	directory_path = os.path.join(upload_folder_path, str(user_id))
 
 	if not os.path.exists(directory_path):
-		print(f"Criando pasta {directory_path}")
-		os.mkdir(directory_path)
+		print(f"Creating folder {directory_path}")
+		os.makedirs(directory_path, exist_ok=True)
 
 	file_path = os.path.join(directory_path, filename)
 
@@ -167,7 +167,7 @@ def push_bank_accounts_to_database(df: pd.DataFrame):
 			db.session.rollback()
 
 
-def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: User, filepath: str)\
+def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: User)\
 							-> (Union[str, None], Union[str, None]):
 	if df.empty:
 		return None, "Nenhuma transação no arquivo"
@@ -179,7 +179,6 @@ def push_transactions_to_db(df: pd.DataFrame, date: datetime.datetime, user: Use
 		db.create_all()
 
 	t_file = TransactionsFile(transactions_date=date,
-							  csv_filepath=filepath,
 							  upload_datetime=datetime.datetime.now(),
 							  user_id=user.id)
 	db.session.add(t_file)

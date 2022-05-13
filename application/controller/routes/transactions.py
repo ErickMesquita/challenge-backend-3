@@ -38,6 +38,7 @@ def configure_routes_transactions(app: Flask):
 		file = form.file.data
 
 		upload_folder_path = app.config['UPLOAD_FOLDER']
+
 		file_path, error = t_utils.save_uploaded_file(file, upload_folder_path, current_user.id)
 		if error:
 			flash(error, category="warning")
@@ -53,7 +54,7 @@ def configure_routes_transactions(app: Flask):
 			flash(error, category="warning")
 			return redirect(url_for("transactions_get"), 303)
 
-		success, error = t_utils.push_transactions_to_db(df, date, current_user, file_path)
+		success, error = t_utils.push_transactions_to_db(df, date, current_user)
 
 		if error:
 			flash(error, category="warning")
