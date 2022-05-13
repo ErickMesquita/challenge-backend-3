@@ -2,7 +2,7 @@ from typing import Union, List, Type
 from sys import getsizeof
 import pandas as pd
 import datetime
-from decimal import Decimal
+from decimal import Decimal, DecimalException
 from numpy import nan
 
 from application.controller.transactions_utils.extensions_support_strategies import CsvStrategy,\
@@ -20,7 +20,15 @@ from application.models.user import User
 def decimal_from_value(value):
 	if value is None or value == "" or value is nan or value is pd.NaT:
 		return nan
-	return Decimal(value)
+	if isinstance(value, str):
+		value.replace(",", ".")
+
+	try:
+		value_decimal = Decimal(value)
+	except DecimalException:
+		value_decimal = nan
+
+	return value_decimal
 
 
 def save_uploaded_file(file, upload_folder_path: str, user_id: int) -> (Union[str, None], Union[str, None]):

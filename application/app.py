@@ -27,7 +27,7 @@ def create_app(config_name: str) -> Flask:
         print(f"os.environ.get(\"PGPASSWORD\")={os.environ.get('PGPASSWORD')}")
         print(f"os.environ.get(\"PGHOST\")={os.environ.get('PGHOST')}")
         print(f"os.environ.get(\"PGPORT\")={os.environ.get('PGPORT')}")
-        sys.exit(9)
+        sys.exit(509)
 
     from application.models import db, migrate, login_manager, bcrypt
     db.init_app(app)
