@@ -6,12 +6,17 @@ class Config(object):
 	TESTING = False
 
 	database = os.environ.get("APPLICATION_DB")
-	# Note que aqui não usamos "POSTGRES_DB". É uma boa prática separar a DB da nossa aplicação da DB padrão do Postgres
 
 	user = os.environ.get("POSTGRES_USER")
 	password = os.environ.get("POSTGRES_PASSWORD")
 	host = os.environ.get("POSTGRES_HOSTNAME")
 	port = os.environ.get("POSTGRES_PORT")
+
+	database = os.environ.get("PGDATABASE")
+	user = os.environ.get("PGUSER")
+	password = os.environ.get("PGPASSWORD")
+	host = os.environ.get("PGHOST")
+	port = os.environ.get("PGPORT")
 
 	encoding = os.environ.get("DB_ENCODING")
 	SQLALCHEMY_ECHO = bool(os.environ.get("DB_ECHO"))
