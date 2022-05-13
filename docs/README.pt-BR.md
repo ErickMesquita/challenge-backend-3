@@ -46,7 +46,11 @@ Este projeto foi apresentado para a banca de professores da Alura e foi aprovado
 
 ## :hammer_and_wrench: Abrir e rodar o projeto
 
-Acesse o site http://challenge-backend3.freedynamicdns.net:5000/login e veja o serviço rodando!
+Acesse o site https://challenge-backend-3-production.up.railway.app/login e veja o serviço rodando!
+
+Usuário padrão:
+ - Login: Admin
+ - Senha: 123999
 
 ou
 

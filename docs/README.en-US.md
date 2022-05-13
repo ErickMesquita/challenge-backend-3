@@ -49,7 +49,11 @@ New users can only be registered by existing users. One of the project requireme
 
 ## :hammer_and_wrench: Open and run the project
 
-Go to http://challenge-backend3.freedynamicdns.net:5000/login and see the service running!
+Go to https://challenge-backend-3-production.up.railway.app/login and see the service running!
+
+Default user account is:
+ - Login: Admin
+ - Pass: 123999
 
 or
 

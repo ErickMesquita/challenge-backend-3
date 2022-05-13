@@ -21,7 +21,7 @@ def configure_routes(app: Flask):
 	configure_routes_users(app)
 	configure_routes_transactions(app)
 
-	@app.get("/")
+	@app.route("/")
 	def index():
 		return redirect("login")
 
