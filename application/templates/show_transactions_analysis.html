@@ -8,7 +8,7 @@
                         <label for="month">Mês das transações: </label>
                     </div>
                     <div class="col border px-3 py-1 border-2">
-                        <input type="month" name="month">
+                        <input type="month" name="month"{% if date_selected %} value="{{ date }}"{% endif %}>
                     </div>
                 </div>
                 <div class="row gx-2">

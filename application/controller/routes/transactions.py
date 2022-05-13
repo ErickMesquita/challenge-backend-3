@@ -65,11 +65,16 @@ def configure_routes_transactions(app: Flask):
 	@app.get("/transactions/analysis")
 	@login_required
 	def transactions_analysis_get():
-		if not ("year" in request.args.keys() and "month" in request.args.keys()):
+		if "month" not in request.args.keys():
 			return render_template("show_transactions_analysis.html", date_selected=False)
 
-		month = int(request.args.get("month"))
-		year = int(request.args.get("year"))
+		if "-" not in request.args.get("month"):
+			return render_template("show_transactions_analysis.html", date_selected=False)
+
+		year_month = request.args.get("month").split("-")
+
+		month = int(year_month[1])
+		year = int(year_month[0])
 		transactions = get_transactions_from_month(month, year)
 
 		sus_transactions = get_sus_transactions(transactions)
@@ -79,4 +84,5 @@ def configure_routes_transactions(app: Flask):
 		return render_template("show_transactions_analysis.html", date_selected=True,
 							   sus_transactions=sus_transactions,
 							   sus_accounts=sus_accounts,
-							   sus_branches=sus_branches)
+							   sus_branches=sus_branches,
+							   date=f"{year:04}-{month:02}")
