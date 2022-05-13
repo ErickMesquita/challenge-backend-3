@@ -5,6 +5,8 @@ Obtido de: https://www.thedigitalcatonline.com/blog/2020/07/05/flask-project-set
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import os
+import sys
 
 from manage import configure_app
 
@@ -17,6 +19,15 @@ def create_app(config_name: str) -> Flask:
     config_module = f"application.config.{config_name.capitalize()}Config"
 
     app.config.from_object(config_module)
+
+    if os.environ.get("PGDATABASE") is None:
+        print("Error: PG env variables not set!")
+        print(f"os.environ.get(\"PGDATABASE\")={os.environ.get('PGDATABASE')}")
+        print(f"os.environ.get(\"PGUSER\")={os.environ.get('PGUSER')}")
+        print(f"os.environ.get(\"PGPASSWORD\")={os.environ.get('PGPASSWORD')}")
+        print(f"os.environ.get(\"PGHOST\")={os.environ.get('PGHOST')}")
+        print(f"os.environ.get(\"PGPORT\")={os.environ.get('PGPORT')}")
+        sys.exit(9)
 
     from application.models import db, migrate, login_manager, bcrypt
     db.init_app(app)

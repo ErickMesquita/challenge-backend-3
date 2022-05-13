@@ -5,13 +5,6 @@ class Config(object):
 	"""Base configuration"""
 	TESTING = False
 
-	database = os.environ.get("APPLICATION_DB")
-
-	user = os.environ.get("POSTGRES_USER")
-	password = os.environ.get("POSTGRES_PASSWORD")
-	host = os.environ.get("POSTGRES_HOSTNAME")
-	port = os.environ.get("POSTGRES_PORT")
-
 	database = os.environ.get("PGDATABASE")
 	user = os.environ.get("PGUSER")
 	password = os.environ.get("PGPASSWORD")
