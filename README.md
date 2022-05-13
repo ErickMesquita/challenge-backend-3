@@ -18,7 +18,7 @@ Os usuários podem fazer o upload de planilhas contendo dados de transações fi
 
 Este projeto foi apresentado para a banca de professores da Alura e foi aprovado em 10/05/2022.
 
-## Requisitos
+## <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo.svg" alt="Alura Challenges" width="24px" class="emoji"> Requisitos
 
  - [Python 3.8+](https://docs.python.org/3.8/)
  - [Docker](https://www.docker.com/)
@@ -69,7 +69,7 @@ Opcionalmente, pode-se adicionar a variável de ambiente `APPLICATION_CONFIG` pa
 APPLICATION_CONFIG=testing python manage.py compose up
 ```
 
-## Modos de Operação
+## <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo.svg" alt="Alura Challenges" width="24px" class="emoji"> Modos de Operação
 
  - `testing`: Inicia um contêiner com o banco de dados sem persistência. A aplicação deve ser executada diretamente no host, sem conteinerização. Este modo é especialmente útil para executar os testes pytest 
  - `development`: Tanto o banco de dados quanto a aplicação rodam em contêineres. Os dados do banco de dados são armazenados em um volume no host. Os códigos da aplicação são trazidos de volume no host, para que a cada mudança no código o servidor seja automaticamente atualizado com a versão mais recente
