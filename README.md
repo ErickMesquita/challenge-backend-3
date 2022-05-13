@@ -21,7 +21,7 @@ Users are able to upload spreadsheets with financial transactions data to be ana
 
 This project was submited to Alura Teachers' Board and approved in May 10 2022
 
-## <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo.svg" alt="Alura Challenges" width="24px" class="emoji"> Requirements
+## <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo.svg" width="24px" class="emoji"> Requirements
 
  - [Python 3.8+](https://docs.python.org/3.8/)
  - [Docker](https://www.docker.com/)
