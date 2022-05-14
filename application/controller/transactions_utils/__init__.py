@@ -20,7 +20,9 @@ from application.models.user import User
 def decimal_from_value(value):
 	if value is None or value == "" or value is nan or value is pd.NaT:
 		return nan
+
 	if isinstance(value, str):
+		value.replace(",", "", value.count(",")-1)
 		value.replace(",", ".")
 
 	try:
