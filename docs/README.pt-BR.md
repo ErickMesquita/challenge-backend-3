@@ -36,12 +36,25 @@ Este projeto foi apresentado para a banca de professores da Alura e foi aprovado
 
 ### :closed_lock_with_key: Login
 
+Somente usuários logados podem acessar o sistema, fazer upload de arquivos e gerar análises.
+
 <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Login-admin.gif" alt="GIF showing user login" width=550>
 
 
 ### :closed_lock_with_key: Signup
 
+Novos usuários só podem ser registrados por usuários existentes. Um dos requisitos do projeto é que seja gerada uma senha numérica de 6 dígitos. A senha é armazenada criptografada no banco de dados com SHA512 e [bcrypt](https://flask-bcrypt.readthedocs.io/en/latest/)
+
 <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Signup.gif" alt="GIF showing new user account creation" width=550>
+
+### :microscope: Análise
+
+São consideradas suspeitas:
+ - Transações acima de R$100.000,00
+ - Contas bancárias que enviarem ou receberem R$1.000.000,00 ou mais no mesmo mês
+ - Agências bancárias que enviarem ou receberem R$1.000.000.000,00 ou mais no mesmo mês
+
+<p align="center"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Analysis.gif" alt="GIF showing new user account creation" width=550></p>
 
 ## :hammer_and_wrench: Abrir e rodar o projeto
 

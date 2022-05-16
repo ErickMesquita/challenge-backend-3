@@ -47,6 +47,15 @@ New users can only be registered by existing users. One of the project requireme
 
 <p align="center"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Signup.gif" alt="GIF showing new user account creation" width=550></p>
 
+### :microscope: Analysis
+
+The following are considered suspects:
+ - Transactions over BRL 100,000.00
+ - Bank accounts that send or receive BRL 1,000,000.00 or more in the same month
+ - Bank branches that send or receive BRL 1,000,000,000.00 or more in the same month
+
+<p align="center"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/gif/Analysis.gif" width=550></p>
+
 ## :hammer_and_wrench: Open and run the project
 
 Go to https://challenge-backend-3-production.up.railway.app/login and see the service running!
