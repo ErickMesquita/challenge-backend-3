@@ -8,22 +8,20 @@
 | :placard: Vitrine.Dev |     |
 | -------------  | --- |
 | :sparkles: Nome        | **Challenge Back-End 3ª Edition**
-| :label: Tecnologias | <a href="https://docs.python.org/3.8/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Python-3.8-brightgreen.svg" alt="Python 3.8"></a> <a href="https://docs.pytest.org/en/7.1.x/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/tested%20with-pytest-blue.svg" alt="Teste with pytest"></a> <a href="https://docs.docker.com/compose/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Deploy%20with-Docker%20Compose-blue.svg" alt="Deploy with Docker Compose"></a> <img src="https://img.shields.io/badge/Status-Approved-brightgreen" alt="Status: Approved">
+| :label: Tecnologias | Python, Flask, Docker
 | :rocket: URL         | https://challenge-backend-3-production.up.railway.app/login
 | :fire: Desafio     | https://www.alura.com.br/challenges/back-end-3
 
 ![https://www.alura.com.br/challenges/back-end-3](https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo-2-darkbg.svg#vitrinedev)
 
 
-<h3>
-	<p align="center">Web application to analyse and investigate financial transactions</p>
-</h3>
+## Web application to analyse and investigate financial transactions</p>
 
-The goal is to learn web development in practice, with a complete web application that supports file upload, access control and data analysis. This project is split in Docker containers, to facilitate deployment.
+<a href="https://docs.python.org/3.8/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Python-3.8-brightgreen.svg" alt="Python 3.8"></a> <a href="https://docs.pytest.org/en/7.1.x/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/tested%20with-pytest-blue.svg" alt="Teste with pytest"></a> <a href="https://docs.docker.com/compose/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Deploy%20with-Docker%20Compose-blue.svg" alt="Deploy with Docker Compose"></a> <img src="https://img.shields.io/badge/Status-Approved-brightgreen" alt="Status: Approved">
 
-Users are able to upload spreadsheets with financial transactions data to be analysed.
+Just upload your Spreadsheet or CSV file and have it analysed for suspicious transactions!
 
-This project was submited to Alura Teachers' Board and approved in May 10 2022
+This project is split in Docker containers, to facilitate deployment and was submited and approved by Alura Teachers' Board in May 10 2022
 
 ## <img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo.svg" width="24px" class="emoji"> Requirements
 
