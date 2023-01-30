@@ -15,7 +15,7 @@
 ![https://www.alura.com.br/challenges/back-end-3](https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/logo/challenges-logo-2-darkbg.svg#vitrinedev)
 
 
-## Web application to analyse and investigate financial transactions</p>
+## Web application to analyse and investigate financial transactions
 
 <a href="https://docs.python.org/3.8/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Python-3.8-brightgreen.svg" alt="Python 3.8"></a> <a href="https://docs.pytest.org/en/7.1.x/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/tested%20with-pytest-blue.svg" alt="Teste with pytest"></a> <a href="https://docs.docker.com/compose/"><img src="https://github.com/ErickMesquita/challenge-backend-3/blob/master/docs/img/badges/Deploy%20with-Docker%20Compose-blue.svg" alt="Deploy with Docker Compose"></a> <img src="https://img.shields.io/badge/Status-Approved-brightgreen" alt="Status: Approved">
 
